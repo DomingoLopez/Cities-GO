@@ -12,6 +12,9 @@ class MyScene extends THREE.Scene {
     this.renderer = this.createRenderer(myCanvas);
     
     // Se añade a la gui los controles para manipular los elementos de esta clase
+    /**
+     * Quito la interfaz dat.gui de momento
+     */
     this.gui = this.createGUI ();
     
     // Construimos los distinos elementos que tendremos en la escena
@@ -24,7 +27,7 @@ class MyScene extends THREE.Scene {
     this.createCamera ();
     
     // Un suelo 
-    this.createGround ();
+    //this.createGround ();
     
     // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
@@ -32,6 +35,9 @@ class MyScene extends THREE.Scene {
     
     
     // Por último creamos el modelo.
+
+    //En primer lugar, creamos el suelo, que será un array de cajas. Cada una con un índice
+    this.field = this.createFieldBox();
 
 
   }
@@ -79,6 +85,48 @@ class MyScene extends THREE.Scene {
     // Que no se nos olvide añadirlo a la escena, que en este caso es  this
     this.add (ground);
   }
+
+  createFieldBox(){
+
+    var ancho = 50;
+    var largo = 50;
+    var sizeCuadrado = 5;
+
+    var movZ = 0;
+    var movY = 0;
+    var movX = 0;
+
+    var ajusteInicio = sizeCuadrado/2;
+
+
+    for(var i = 0; i<ancho/sizeCuadrado; i++){
+
+      movZ = largo/2 - i*sizeCuadrado - sizeCuadrado/2;
+
+      for(var j = 0; j<largo/sizeCuadrado;j++){
+
+        movX = ancho/2 - j*sizeCuadrado - sizeCuadrado/2;
+
+        var geom = new THREE.BoxGeometry (sizeCuadrado,0.1,5);
+        var mat = new THREE.MeshBasicMaterial({wireframe:true, color: 0x2194ce});
+        var mesh =  new THREE.Mesh(geom, mat);
+
+       
+        mesh.position.x = movX;
+        mesh.position.z = movZ;
+        this.add(mesh);
+
+      }
+
+    }
+
+
+    return mesh;
+
+
+
+  }
+
   
   createGUI () {
     // Se crea la interfaz gráfica de usuario
@@ -134,7 +182,7 @@ class MyScene extends THREE.Scene {
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 1.0);
     
     // Se establece el tamaño, se aprovecha la totalidad de la ventana del navegador
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth*0.9, window.innerHeight);
     
     // La visualización se muestra en el lienzo recibido
     $(myCanvas).append(renderer.domElement);
@@ -159,10 +207,10 @@ class MyScene extends THREE.Scene {
   onWindowResize () {
     // Este método es llamado cada vez que el usuario modifica el tamapo de la ventana de la aplicación
     // Hay que actualizar el ratio de aspecto de la cámara
-    this.setCameraAspect (window.innerWidth / window.innerHeight);
+    this.setCameraAspect (window.innerWidth*0.9 / window.innerHeight);
     
     // Y también el tamaño del renderizador
-    this.renderer.setSize (window.innerWidth, window.innerHeight);
+    this.renderer.setSize (window.innerWidth*0.9, window.innerHeight);
   }
 
   update () {

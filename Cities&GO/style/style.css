@@ -1,0 +1,18 @@
+
+/*CSS PARA EL CONTENEDOR DE LA ESCENA*/
+body{
+    margin: 0;
+    overflow: hidden; 
+}
+
+#menu-elementos{
+    width: 10%;
+}
+
+#menu-elementos{
+    padding: 5px;
+}
+
+.elementos-prueba{
+    text-align: center;
+}

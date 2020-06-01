@@ -3,27 +3,64 @@
 <html>
 
 <head>
-    <title>Ejemplo Básico: Hola Mundo Three.js</title>
+    <title>Cities&GO!</title>
     <meta charset="utf-8">
+
+    <!--Carga de estilos aplicados a la página. Antes, cargamos estilos de bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/style.css">
+
+    <!--Carga de librerías de THREE, jQuery, dat.gui, etc-->
     <script type="text/javascript" src="../libs/three.js"></script>
     <script type="text/javascript" src="../libs/jquery.js"></script>
     <script type="text/javascript" src="../libs/dat.gui.js"></script>
     <script type="text/javascript" src="../libs/TrackballControls.js"></script>
     <script type="text/javascript" src="../libs/ThreeBSP.js"></script>
-    <script type="text/javascript" src="Mapa.js"></script> 
-    <script type="text/javascript" src="MyScene.js"></script>    
+
+    <!--Cargamos librerías específicas de nuestro desarrollo. Incluímos popper y bootstrap-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!--Cargamos JS de nuestro proyecto-->
+    <script type="text/javascript" src="./javascript/main.js"></script>
+    <script type="text/javascript" src="./javascript/Mapa.js"></script> 
+    <script type="text/javascript" src="./javascript/MyScene.js"></script>    
     
-    <style>
-        body{
-            margin: 0;
-            overflow: hidden; 
-        }
-    </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="#">Cities<span style="color:rgb(241, 255, 118)">&</span><span style="color:rgb(137, 255, 126)">GO!</span></a>
+        <!-- Links -->
+        <ul class="navbar-nav ">
+          <li class="nav-item ">
+            <a class="nav-link boton-login-registro" href="javascript:void(0)">Nueva construcción</a>
+          </li>
+        </ul>
+    </nav>
 
-<!-- Div which will hold the Output -->
-<div id="WebGL-output">
-</div>
+    
+    <!-- Div which will hold the Output -->
+    <div id="WebGL-output" class="float-left">
+
+
+    </div>
+    <div id="menu-elementos" class="float-left">
+        <div class="cotainer-fluid elementos-prueba">
+            <h5>Elementos</h5>
+            
+            <button>A</button>
+            <button>B</button>
+            <button>C</button>
+            
+        </div>
+    </div>
+
+    
+
+
+
+
+
 </body>
 </html>
