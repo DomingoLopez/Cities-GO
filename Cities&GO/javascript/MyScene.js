@@ -88,18 +88,18 @@ class MyScene extends THREE.Scene {
 
   createFieldBox(){
 
+    var matrix = [];
+
     var ancho = 50;
     var largo = 50;
     var sizeCuadrado = 5;
 
     var movZ = 0;
-    var movY = 0;
     var movX = 0;
 
-    var ajusteInicio = sizeCuadrado/2;
-
-
     for(var i = 0; i<ancho/sizeCuadrado; i++){
+
+      matrix[i] = [];
 
       movZ = largo/2 - i*sizeCuadrado - sizeCuadrado/2;
 
@@ -111,17 +111,22 @@ class MyScene extends THREE.Scene {
         var mat = new THREE.MeshBasicMaterial({wireframe:true, color: 0x2194ce});
         var mesh =  new THREE.Mesh(geom, mat);
 
-       
         mesh.position.x = movX;
         mesh.position.z = movZ;
+        mesh.name = 'ground-'+i+'-'+j;
+
+        matrix[i][j] = mesh;
         this.add(mesh);
 
       }
 
     }
 
+    //console.log(matrix);
+    //console.log(this.getObjectByName('ground-0-4').name);
 
-    return mesh;
+    //console.log(matrix);
+    return matrix;
 
 
 
