@@ -133,6 +133,31 @@ class Map extends THREE.Object3D {
       }
 
     }
+
+
+    addBox(evento, action){
+
+      var celdaPickada = this.getPointOnGround(event);
+      
+      if(celdaPickada != null){
+
+          var meshPickado = celdaPickada.object;
+
+          var geom = new THREE.BoxGeometry (5,5,5);
+          var mat = new THREE.MeshBasicMaterial({wireframe:false, color: 0x2194ce});
+          var mesh =  new THREE.Mesh(geom, mat);
+
+          mesh.position.x = meshPickado.position.x;
+          mesh.position.z = meshPickado.position.z;
+          mesh.position.y = 2.5;
+
+          this.add(mesh);
+
+
+      }
+
+      
+    }
    
 
 

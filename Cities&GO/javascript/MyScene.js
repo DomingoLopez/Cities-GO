@@ -149,13 +149,20 @@ class MyScene extends THREE.Scene {
 
 
   onMouseDown (event) {
-      this.resaltaHover(event, MyScene.NO_ACTION);
+      //this.mapa.resaltaHover(event, MyScene.NO_ACTION);
+  }
+
+  onMouseClick(event){
+      this.mapa.addBox(event, MyScene.NO_ACTION);
   }
 
 
-  resaltaHover(event, action){
+  onMouseMove(event, action){
     this.mapa.resaltaHover(event, action);
   }
+
+
+
 
   update () {
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
@@ -202,7 +209,8 @@ $(function () {
   window.addEventListener ("resize", () => scene.onWindowResize());
   //Listener que se llama cada vez que se desplaza el ratón
   window.addEventListener ("mousedown", (event) => scene.onMouseDown(event), true);
-  window.addEventListener ("mousemove", (event) => scene.resaltaHover(event), true);
+  window.addEventListener ("click", (event) => scene.onMouseClick(event), true);
+  window.addEventListener ("mousemove", (event) => scene.onMouseMove(event), true);
 
   
   // Que no se nos olvide, la primera visualización.
