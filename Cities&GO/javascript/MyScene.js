@@ -173,7 +173,7 @@ class MyScene extends THREE.Scene {
     
     // Se actualiza la posición de la cámara según su controlador
     this.cameraControl.update();
-    
+   
     // Se actualiza el resto del modelo
 
     
@@ -202,6 +202,8 @@ $(function () {
   window.addEventListener ("resize", () => scene.onWindowResize());
   //Listener que se llama cada vez que se desplaza el ratón
   window.addEventListener ("mousedown", (event) => scene.onMouseDown(event), true);
+  window.addEventListener ("mousemove", (event) => scene.resaltaHover(event), true);
+
   
   // Que no se nos olvide, la primera visualización.
   scene.update();

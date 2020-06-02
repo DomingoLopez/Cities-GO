@@ -9,7 +9,10 @@ class Map extends THREE.Object3D {
         this.ancho = ancho;
         this.largo = largo;
         this.tam_celda = 5;
-        
+
+        //Variable auxiliar para trabajar con él
+        this.meshActual = null;
+
         this.celdas =  this.createFieldBox(this.ancho,this.largo, this.tam_celda);
         
         this.raycaster = new THREE.Raycaster();  // RayCaster para selección del suelo
@@ -104,11 +107,29 @@ class Map extends THREE.Object3D {
     
 
     resaltaHover(event, action){
-      var celdaPickada = this.getPointOnGround(event);
+      var celdaEnHover = this.getPointOnGround(event);
       
-      if(celdaPickada != null){
-        var mesh = celdaPickada.object;
+      if(celdaEnHover != null){
+        
+        if(this.meshActual == null){
+
+          var mesh = celdaEnHover.object;
+          this.meshActual = mesh;
+
+        }else if(celdaEnHover.object != this.meshActual){
+
+          this.meshActual.material.wireframe = true;
+          
+          var mesh = celdaEnHover.object;
+          this.meshActual = mesh;
+
           mesh.material.wireframe = false;
+          
+        }else{ //Si son el mismo
+          
+          this.meshActual.material.wireframe=false;
+        }
+
       }
 
     }
