@@ -11,10 +11,13 @@ class Map extends THREE.Object3D {
         this.tam_celda = 5;
 
         //Variable auxiliar para trabajar con él
-        this.meshActual = null;
+        this.celdaActual = null;
 
         this.celdas =  this.createFieldBox(this.ancho,this.largo, this.tam_celda);
-        
+        this.objetos = [];
+
+        this.objetoAColocar = null;
+
         this.raycaster = new THREE.Raycaster();  // RayCaster para selección del suelo
       
     }
@@ -95,6 +98,7 @@ class Map extends THREE.Object3D {
 
     //Obtenemos el punto del mapa donde se ha pulsado
     getPointOnGround (event) {
+
       var mouse = this.getMouse (event);
       this.raycaster.setFromCamera (mouse, this.scene.getCamera());
       var surfaces = this.celdas;
@@ -104,61 +108,84 @@ class Map extends THREE.Object3D {
       } else
         return null;
     }
-    
 
-    resaltaHover(event, action){
-      var celdaEnHover = this.getPointOnGround(event);
+    getPointOnObjects(event){
       
-      if(celdaEnHover != null){
+      var mouse = this.getMouse (event);
+      this.raycaster.setFromCamera (mouse, this.scene.getCamera());
+      var surfaces = this.objetos;
+      var pickedObjects = this.raycaster.intersectObjects(surfaces);
+      if (pickedObjects.length > 0) {
+        return pickedObjects[0];
+      } else
+        return null;
+    }
+    
+    addProvisional(mesh){
+      this.objetoAColocar = mesh;
+      this.objetoAColocar.name="provisional";
+      this.add(this.objetoAColocar);
+    }
+
+    escogiendoZona(event){
+
+      var celdaEnHover = this.getPointOnGround(event);
+      var objectoEnZona =  this.getPointOnObjects(event);
+
+        if(celdaEnHover != null){
+
+        this.objetoAColocar.position.x = celdaEnHover.object.position.x;
+        this.objetoAColocar.position.z = celdaEnHover.object.position.z;
         
-        if(this.meshActual == null){
-
-          var mesh = celdaEnHover.object;
-          this.meshActual = mesh;
-
-        }else if(celdaEnHover.object != this.meshActual){
-
-          this.meshActual.material.wireframe = true;
+        if(this.celdaActual == null){
           
-          var mesh = celdaEnHover.object;
-          this.meshActual = mesh;
+          var celdaAnterior = celdaEnHover.object;
+          this.celdaActual = celdaAnterior;
 
-          mesh.material.wireframe = false;
+        }else if(celdaEnHover.object != this.celdaActual){
+
+          this.celdaActual.material.wireframe = true;
           
+          var celdaAnterior = celdaEnHover.object;
+          this.celdaActual = celdaAnterior;
+
+          celdaAnterior.material.wireframe = false;
+
         }else{ //Si son el mismo
           
-          this.meshActual.material.wireframe=false;
+          this.celdaActual.material.wireframe=false;
         }
-
       }
+
+
+      if(objectoEnZona != null){
+        this.objetoAColocar.material.color = new THREE.Color(0xce2121);
+      }else{
+        this.objetoAColocar.material.color = new THREE.Color(0x2194ce);
+      }
+
+
 
     }
 
 
-    addBox(evento, action){
+    addObject(event){
 
       var celdaPickada = this.getPointOnGround(event);
       
       if(celdaPickada != null){
 
-          var meshPickado = celdaPickada.object;
+          this.objetoAColocar.material.transparency = false;
+          this.objetoAColocar.material.opacity = 1;
 
-          var geom = new THREE.BoxGeometry (5,5,5);
-          var mat = new THREE.MeshBasicMaterial({wireframe:false, color: 0x2194ce});
-          var mesh =  new THREE.Mesh(geom, mat);
-
-          mesh.position.x = meshPickado.position.x;
-          mesh.position.z = meshPickado.position.z;
-          mesh.position.y = 2.5;
-
-          this.add(mesh);
-
+          this.objetos.push(this.objetoAColocar);
+          this.objetoAColocar =  null;
+          this.scene.setApplicationMode(MyScene.NO_ACTION)
 
       }
 
       
     }
-   
 
 
     update () {

@@ -21,11 +21,8 @@ class MyScene extends THREE.Scene {
     this.add (this.axis);
 
     //Estado de la aplicación
-    this.applicationMode = MyScene.NO_ACTION;    
+    this.applicationMode = MyScene.NO_ACTION;  
 
-    //Ratón pickado
-    this.mouseDown = false;
-    
     //Creamos el mapa, pasándole la escena, el ancho y el largo. 
     //Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
     this.mapa =  new Map(this, 50, 50); //Ancho, largo, y tam de cada cuadrado
@@ -42,7 +39,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (5 , 5, 20);
+    this.camera.position.set (0 , 30, 70);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
@@ -51,7 +48,7 @@ class MyScene extends THREE.Scene {
     // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
     this.cameraControl = new THREE.TrackballControls (this.camera, this.renderer.domElement);
     // Se configuran las velocidades de los movimientos
-    this.cameraControl.rotateSpeed = 5;
+    this.cameraControl.rotateSpeed = 2;
     this.cameraControl.zoomSpeed = -2;
     this.cameraControl.panSpeed = 0.5;
     // Debe orbitar con respecto al punto de mira de la cámara
@@ -153,16 +150,41 @@ class MyScene extends THREE.Scene {
   }
 
   onMouseClick(event){
-      this.mapa.addBox(event, MyScene.NO_ACTION);
+
+      switch(this.applicationMode){
+
+        case MyScene.ADDING_OBJECT:
+          this.mapa.addObject(event);
+        break;
+
+      }
+
+
   }
 
 
-  onMouseMove(event, action){
-    this.mapa.resaltaHover(event, action);
+  onMouseMove(event){
+  
+      switch(this.applicationMode){
+
+        case MyScene.ADDING_OBJECT:
+          this.mapa.escogiendoZona(event);
+        break;
+
+
+      }
+
+      
   }
 
 
+  setApplicationMode(estado){
+    this.applicationMode = estado;
+  }
 
+  setProvisionalMapa(mesh){
+    this.mapa.addProvisional(mesh);
+  }
 
   update () {
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
@@ -207,12 +229,70 @@ $(function () {
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
-  //Listener que se llama cada vez que se desplaza el ratón
+  
+  /**
+   * LISTENERS DE RATÓN
+   */
   window.addEventListener ("mousedown", (event) => scene.onMouseDown(event), true);
   window.addEventListener ("click", (event) => scene.onMouseClick(event), true);
   window.addEventListener ("mousemove", (event) => scene.onMouseMove(event), true);
 
+  /**
+   * LISTENERS DE TECLADO
+   */
   
+
+
+
+
+  /**
+   * LISTENERS DE MENÚ Y JS EN EL HTML
+   */
+
+  //Listener para seleccionar un objeto del menú. 
+  //Modificamos además el estado de la escena para actuar en función.
+
+  $(".elementos-escena button").click(function(){
+    
+    var elemento = $(this).val();
+    var ajusteY = null;
+
+    var mat = new THREE.MeshBasicMaterial({transparent:true, opacity :0.5, color: 0x2194ce});
+    var geom = null;
+
+    switch(elemento){
+
+      case 'casa':
+
+      geom = new THREE.BoxGeometry(5,5,5);
+      ajusteY = 2.5;
+      break;
+
+      case 'bloque-pisos':
+        geom = new THREE.BoxGeometry(5,10,5);
+        ajusteY = 5;
+      break;
+
+      case 'rascacielos':
+        geom = new THREE.BoxGeometry(5,15,5);
+        ajusteY = 7.5;
+      break;
+
+    }
+
+    var mesh = new THREE.Mesh(geom, mat);
+    mesh.position.y = ajusteY;
+
+
+    scene.setProvisionalMapa(mesh);
+    scene.setApplicationMode(MyScene.ADDING_OBJECT);
+
+    
+  });
+
+
+
+
   // Que no se nos olvide, la primera visualización.
   scene.update();
 
