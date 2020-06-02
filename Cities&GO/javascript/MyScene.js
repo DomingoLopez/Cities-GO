@@ -10,34 +10,27 @@ class MyScene extends THREE.Scene {
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
-    
-    // Se añade a la gui los controles para manipular los elementos de esta clase
-    /**
-     * Quito la interfaz dat.gui de momento
-     */
+    //Interfaz
     this.gui = this.createGUI ();
-    
-    // Construimos los distinos elementos que tendremos en la escena
-    
-    // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
-    // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
+    //Luces
     this.createLights ();
-    
-    // Tendremos una cámara con un control de movimiento con el ratón
+    //Camara
     this.createCamera ();
-    
-    // Un suelo 
-    //this.createGround ();
-    
-    // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
+    //Ejes    
     this.axis = new THREE.AxesHelper (5);
     this.add (this.axis);
-    
-    
-    // Por último creamos el modelo.
 
-    //En primer lugar, creamos el suelo, que será un array de cajas. Cada una con un índice
-    this.field = this.createFieldBox();
+    //Estado de la aplicación
+    this.applicationMode = MyScene.NO_ACTION;    
+
+    //Ratón pickado
+    this.mouseDown = false;
+    
+    //Creamos el mapa, pasándole la escena, el ancho y el largo. 
+    //Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
+    this.mapa =  new Map(this, 50, 50); //Ancho, largo, y tam de cada cuadrado
+
+    this.add(this.mapa);
 
 
   }
@@ -65,72 +58,8 @@ class MyScene extends THREE.Scene {
     this.cameraControl.target = look;
   }
   
-  createGround () {
-    // El suelo es un Mesh, necesita una geometría y un material.
-    
-    // La geometría es una caja con muy poca altura
-    var geometryGround = new THREE.BoxGeometry (50,0.2,50);
-    
-    // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('../imgs/wood.jpg');
-    var materialGround = new THREE.MeshPhongMaterial ({map: texture});
-    
-    // Ya se puede construir el Mesh
-    var ground = new THREE.Mesh (geometryGround, materialGround);
-    
-    // Todas las figuras se crean centradas en el origen.
-    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
-    ground.position.y = -0.1;
-    
-    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
-    this.add (ground);
-  }
+ 
 
-  createFieldBox(){
-
-    var matrix = [];
-
-    var ancho = 50;
-    var largo = 50;
-    var sizeCuadrado = 5;
-
-    var movZ = 0;
-    var movX = 0;
-
-    for(var i = 0; i<ancho/sizeCuadrado; i++){
-
-      matrix[i] = [];
-
-      movZ = largo/2 - i*sizeCuadrado - sizeCuadrado/2;
-
-      for(var j = 0; j<largo/sizeCuadrado;j++){
-
-        movX = ancho/2 - j*sizeCuadrado - sizeCuadrado/2;
-
-        var geom = new THREE.BoxGeometry (sizeCuadrado,0.1,5);
-        var mat = new THREE.MeshBasicMaterial({wireframe:true, color: 0x2194ce});
-        var mesh =  new THREE.Mesh(geom, mat);
-
-        mesh.position.x = movX;
-        mesh.position.z = movZ;
-        mesh.name = 'ground-'+i+'-'+j;
-
-        matrix[i][j] = mesh;
-        this.add(mesh);
-
-      }
-
-    }
-
-    //console.log(matrix);
-    //console.log(this.getObjectByName('ground-0-4').name);
-
-    //console.log(matrix);
-    return matrix;
-
-
-
-  }
 
   
   createGUI () {
@@ -187,7 +116,7 @@ class MyScene extends THREE.Scene {
     renderer.setClearColor(new THREE.Color(0xEEEEEE), 1.0);
     
     // Se establece el tamaño, se aprovecha la totalidad de la ventana del navegador
-    renderer.setSize(window.innerWidth*0.9, window.innerHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     
     // La visualización se muestra en el lienzo recibido
     $(myCanvas).append(renderer.domElement);
@@ -212,10 +141,20 @@ class MyScene extends THREE.Scene {
   onWindowResize () {
     // Este método es llamado cada vez que el usuario modifica el tamapo de la ventana de la aplicación
     // Hay que actualizar el ratio de aspecto de la cámara
-    this.setCameraAspect (window.innerWidth*0.9 / window.innerHeight);
+    this.setCameraAspect (window.innerWidth / window.innerHeight);
     
     // Y también el tamaño del renderizador
-    this.renderer.setSize (window.innerWidth*0.9, window.innerHeight);
+    this.renderer.setSize (window.innerWidth, window.innerHeight);
+  }
+
+
+  onMouseDown (event) {
+      this.resaltaHover(event, MyScene.NO_ACTION);
+  }
+
+
+  resaltaHover(event, action){
+    this.mapa.resaltaHover(event, action);
   }
 
   update () {
@@ -243,6 +182,16 @@ class MyScene extends THREE.Scene {
   }
 }
 
+/**
+ * ESTADOS DE LA ESCENA A TENER EN CUENTA
+ */
+
+MyScene.NO_ACTION = 0;
+MyScene.ADDING_OBJECT = 1;
+MyScene.MOVING_OBJECT = 2;
+
+
+
 /// La función   main
 $(function () {
   
@@ -251,7 +200,11 @@ $(function () {
 
   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
   window.addEventListener ("resize", () => scene.onWindowResize());
+  //Listener que se llama cada vez que se desplaza el ratón
+  window.addEventListener ("mousedown", (event) => scene.onMouseDown(event), true);
   
   // Que no se nos olvide, la primera visualización.
   scene.update();
+
+
 });
