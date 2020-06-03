@@ -27,4 +27,6 @@ class AssignHelper extends THREE.Mesh {
     setColorSeleccion(){
         this.material.color = new THREE.Color(this.colorSeleccion);
     }
+
+    
 }

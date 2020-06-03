@@ -15,6 +15,7 @@ class MyScene extends THREE.Scene {
 		this.createLights();
 		//Camara
 		this.createCamera();
+
 		//Ejes
 		this.axis = new THREE.AxesHelper(5);
 		this.add(this.axis);
@@ -25,8 +26,16 @@ class MyScene extends THREE.Scene {
 		//Creamos el mapa, pasándole la escena, el ancho y el largo.
 		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
 		this.mapa = new Map(this, 50, 50); //Ancho, largo, y tam de cada cuadrado
-
 		this.add(this.mapa);
+		
+		//Creamos el gestor de Acciones, que será llamado cada vez que se 
+		//cumpla un evento del ratón o teclado
+		this.gestorAcciones = new GestorAcciones(this, this.mapa);
+
+		//Gestor para detección y acciones de las teclas
+		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
+
+		
 	}
 
 	createCamera() {
@@ -122,17 +131,19 @@ class MyScene extends THREE.Scene {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	onMouseDown(event) {
-		//this.mapa.resaltaHover(event, MyScene.NO_ACTION);
-	}
 
 	onMouseClick(event) {
 		switch (this.applicationMode) {
 			case MyScene.ADDING_OBJECT:
-				this.mapa.addObject(event);
+				this.gestorAcciones.addObject(event);
 				break;
+
+			case MyScene.SELECTED_OBJECT:
+				this.gestorAcciones.addObject(event);
+				break;
+
 			case MyScene.NO_ACTION:
-				this.mapa.selectObject(event);
+				this.gestorAcciones.selectObject(event);
 				break;
 		}
 	}
@@ -140,11 +151,16 @@ class MyScene extends THREE.Scene {
 	onMouseMove(event) {
 		switch (this.applicationMode) {
 			case MyScene.ADDING_OBJECT:
-				this.mapa.choosingZone(event);
+				this.gestorAcciones.choosingZone(event);
 				break;
+
+			case MyScene.SELECTED_OBJECT:
+				this.gestorAcciones.choosingZone(event);
+				break;
+
 			case MyScene.NO_ACTION:
-				this.mapa.startHelper();
-				this.mapa.choosingObject(event);
+				this.gestorAcciones.reloadHelper();
+				this.gestorAcciones.choosingObject(event);
 				break;
 		}
 	}
@@ -153,8 +169,12 @@ class MyScene extends THREE.Scene {
 		this.applicationMode = estado;
 	}
 
-	setProvisionalMapa(mesh) {
-		this.mapa.addProvisional(mesh);
+	getApplicationMode(){
+		return this.applicationMode;
+	}
+
+	prepareGestorAcciones(mesh) {
+		this.gestorAcciones.prepareADD(mesh);
 	}
 
 	update() {
@@ -184,7 +204,8 @@ class MyScene extends THREE.Scene {
 
 MyScene.NO_ACTION = 0;
 MyScene.ADDING_OBJECT = 1;
-MyScene.MOVING_OBJECT = 2;
+MyScene.SELECTED_OBJECT = 2;
+MyScene.MOVING_OBJECT = 3;
 
 /// La función   main
 $(function() {
@@ -197,14 +218,16 @@ $(function() {
 	/**
    * LISTENERS DE RATÓN
    */
-	window.addEventListener('mousedown', (event) => scene.onMouseDown(event), true);
 	window.addEventListener('click', (event) => scene.onMouseClick(event), true);
 	window.addEventListener('mousemove', (event) => scene.onMouseMove(event), true);
 
 	/**
    * LISTENERS DE TECLADO
    */
-	window.addEventListener('keydown', (event) => scene.camara.onKeyDown(event), false);
+
+	//Listener para el teclado
+	window.addEventListener('keydown', (event) => scene.gestorTeclado.onKeyDown(event), false);
+
 
 	/**
    * LISTENERS DE MENÚ Y JS EN EL HTML
@@ -214,11 +237,12 @@ $(function() {
 	//Modificamos además el estado de la escena para actuar en función.
 
 	$('.elementos-escena button').click(function() {
+		
 		var elemento = $(this).val();
 		var gestor = new GestorModelos(elemento);
 		var mesh = gestor.getMesh();
 
-		scene.setProvisionalMapa(mesh);
+		scene.prepareGestorAcciones(mesh);
 		scene.setApplicationMode(MyScene.ADDING_OBJECT);
 	});
 
