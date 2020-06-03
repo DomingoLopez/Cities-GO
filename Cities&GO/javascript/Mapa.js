@@ -14,9 +14,16 @@ class Map extends THREE.Object3D {
 		this.celdas = this.createFieldBox(this.ancho, this.largo, this.tam_celda);
 		this.objetos = [];
 
+		/**
+		 * SACAR ÉSTAS VARIABLES Y PONERLAS HACIENDO UNA CLASE GESTORACCIONES O ALGO ASÍ
+		 */
+
+		//Variables para colocar objetcos
 		this.objetoAColocar = null;
 		//Objeto auxiliar helper para la colocación
 		this.helper = null;
+		//Booleano para saber si el helper está en uso y no volver a pintarlo
+		this.helperOnScene = false;
 
 		this.raycaster = new THREE.Raycaster(); // RayCaster para selección del suelo
 	}
@@ -58,8 +65,7 @@ class Map extends THREE.Object3D {
 	getEstadoCelda(meshCelda) {
 		if (meshCelda != null) {
 			var campos = meshCelda.name.split('-');
-			console.log(campos[3]);
-			console.log(campos[3] == 'free' ? true : false);
+
 
 			return campos[3] == 'free' ? true : false;
 		} else {
@@ -104,16 +110,52 @@ class Map extends THREE.Object3D {
 		} else return null;
 	}
 
+	//Éste sí solo devuelve el primer objeto que encuentre
+	getPointOnObject(event){
+		var mouse = this.getMouse(event);
+		this.raycaster.setFromCamera(mouse, this.scene.getCamera());
+		var surfaces = this.objetos;
+		var pickedObjects = this.raycaster.intersectObjects(surfaces);
+		if (pickedObjects.length > 0) {
+			return pickedObjects[0]; //Ha de devolver todos los objetos en el rayo, no solo uno
+		} else return null;
+	}
+
+
+	startHelper(){
+		if(this.helper == null)
+			this.helper = new AssignHelper();
+	}
+
+	destroyHelper(){
+		this.remove(this.helper);
+		this.helper = null;
+		this.helperOnScene = false;
+	}
+
 	addProvisional(mesh) {
 		this.objetoAColocar = mesh;
 		this.add(this.objetoAColocar);
 
 		//Añadimos el helper
-		this.helper = new AssignHelper();
+		this.startHelper();
 		this.add(this.helper);
 	}
 
-	escogiendoZona(event) {
+	addProvisionalMover(mesh){
+		this.objetoAColocar = mesh;
+		//Notar que aquí no volvemos a añadir el mesh
+		//a la escena
+
+		//Añadimos el helper
+		if(this.helper == null){
+			this.startHelper();
+			this.add(this.helper);
+		}
+		
+	}
+
+	choosingZone(event) {
 		var celdaEnHover = this.getPointOnGround(event);
 		var objectosEnZona = this.getPointOnObjects(event);
 
@@ -169,6 +211,77 @@ class Map extends THREE.Object3D {
 		}
 	}
 
+	choosingObject(event){
+		
+		var objetoASeleccionar = this.getPointOnObject(event);
+
+		if (objetoASeleccionar != null) {
+			
+			this.helper.position.x = objetoASeleccionar.object.position.x;
+			this.helper.position.z = objetoASeleccionar.object.position.z;
+
+			if(this.helperOnScene == false){
+				this.add(this.helper);
+				this.helperOnScene = true;
+			}
+
+		}else{
+			if(this.helperOnScene){
+				this.remove(this.helper);
+			}
+			this.helperOnScene = false;
+		} 
+
+
+	}
+
+	selectObject(event){
+
+		//Aquí habría que acceder al userData del mesh seleccionado
+		//Y ya operar con el object3D.
+		//De momento lo tratamos como un mesh
+		var objetoSeleccionado = this.getPointOnObject(event);
+
+		if(objetoSeleccionado != null){
+			//Si hemos picado un objeto.
+			//Ahora obtenemos el object3D. Lo dicho, de momento no
+			var objeto = objetoSeleccionado.object;
+
+			//Debemos borrar el objeto del array de objetos de la escena
+			//SI NO, GG
+			this.deleteFromObjectsArray(objeto);
+
+			//Ahora sí lo añadimos para su gestión
+			this.addProvisionalMover(objeto);
+			this.scene.setApplicationMode(MyScene.ADDING_OBJECT);
+
+		}
+
+
+	}
+
+
+	deleteFromObjectsArray(mesh){
+
+		var terminado;
+		for(var i = 0; i<this.objetos.length && !terminado; i++){
+			
+			if(mesh == this.objetos[i]){
+				terminado =  true;
+				delete this.objetos[i];
+			}
+		}
+
+		//AL HACER DELETE, QUEDAN HUECOS CON UNDEFINED EN EL ARRAY.
+		//SE BORRAN ASÍ
+		var aux = this.objetos.filter(function(limpios){
+			return limpios != undefined;
+		});
+
+		this.objetos = aux;
+
+	}
+
 	addObject(event) {
 		var celdaPickada = this.getPointOnGround(event);
 
@@ -180,7 +293,7 @@ class Map extends THREE.Object3D {
 
 			this.objetos.push(this.objetoAColocar);
 
-			this.remove(this.helper);
+			this.destroyHelper();//Elimina el helper de la escena
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
 	}

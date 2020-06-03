@@ -131,13 +131,20 @@ class MyScene extends THREE.Scene {
 			case MyScene.ADDING_OBJECT:
 				this.mapa.addObject(event);
 				break;
+			case MyScene.NO_ACTION:
+				this.mapa.selectObject(event);
+				break;
 		}
 	}
 
 	onMouseMove(event) {
 		switch (this.applicationMode) {
 			case MyScene.ADDING_OBJECT:
-				this.mapa.escogiendoZona(event);
+				this.mapa.choosingZone(event);
+				break;
+			case MyScene.NO_ACTION:
+				this.mapa.startHelper();
+				this.mapa.choosingObject(event);
 				break;
 		}
 	}

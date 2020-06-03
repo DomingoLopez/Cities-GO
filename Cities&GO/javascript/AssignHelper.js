@@ -5,6 +5,7 @@ class AssignHelper extends THREE.Mesh {
         this.position.y = 15;
         this.colorCorrecto = 0x58ce21;
         this.colorError = 0xce2121;
+        this.colorSeleccion = 0x2194ce;
 	}
 
 	getColorCorrecto() {
@@ -21,5 +22,9 @@ class AssignHelper extends THREE.Mesh {
 
     setColorError(){
         this.material.color = new THREE.Color(this.colorError);
+    }
+
+    setColorSeleccion(){
+        this.material.color = new THREE.Color(this.colorSeleccion);
     }
 }
