@@ -31,7 +31,12 @@ class Map extends THREE.Object3D {
 				movX = ancho / 2 - j * tam_celda - tam_celda / 2;
 
 				var geom = new THREE.BoxGeometry(tam_celda, 0.1, 5);
-				var mat = new THREE.MeshBasicMaterial({ wireframe: true, color: 0x2194ce });
+				var mat = new THREE.MeshBasicMaterial({
+					wireframe: true,
+					transparency: true,
+					opacity: 0.5,
+					color: 0x2194ce
+				});
 				var mesh = new THREE.Mesh(geom, mat);
 
 				mesh.position.x = movX;
@@ -99,7 +104,7 @@ class Map extends THREE.Object3D {
 
 	addProvisional(mesh) {
 		this.objetoAColocar = mesh;
-		this.objetoAColocar.name = 'provisional';
+		//this.objetoAColocar.name = 'provisional';
 		this.add(this.objetoAColocar);
 	}
 
@@ -141,6 +146,10 @@ class Map extends THREE.Object3D {
 		if (celdaPickada != null) {
 			this.objetoAColocar.material.transparency = false;
 			this.objetoAColocar.material.opacity = 1;
+
+			var asignador = new Colores();
+			var color_asociado = asignador.getColorObjeto(this.objetoAColocar);
+			this.objetoAColocar.material.color = new THREE.Color(color_asociado);
 
 			this.objetos.push(this.objetoAColocar);
 			this.objetoAColocar = null;

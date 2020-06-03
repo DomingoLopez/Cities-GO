@@ -108,9 +108,9 @@ class MyScene extends THREE.Scene {
 	setCameraAspect(ratio) {
 		// Cada vez que el usuario modifica el tamaño de la ventana desde el gestor de ventanas de
 		// su sistema operativo hay que actualizar el ratio de aspecto de la cámara
-		this.camera.aspect = ratio;
+		this.getCamera().aspect = ratio;
 		// Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
-		this.camera.updateProjectionMatrix();
+		this.getCamera().updateProjectionMatrix();
 	}
 
 	onWindowResize() {
@@ -212,26 +212,8 @@ $(function() {
 
 		var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.5, color: 0x2194ce });
 		var geom = null;
-
-		switch (elemento) {
-			case 'casa':
-				geom = new THREE.BoxGeometry(5, 5, 5);
-				ajusteY = 2.5;
-				break;
-
-			case 'bloque-pisos':
-				geom = new THREE.BoxGeometry(5, 10, 5);
-				ajusteY = 5;
-				break;
-
-			case 'rascacielos':
-				geom = new THREE.BoxGeometry(5, 15, 5);
-				ajusteY = 7.5;
-				break;
-		}
-
-		var mesh = new THREE.Mesh(geom, mat);
-		mesh.position.y = ajusteY;
+		var gestor = new GestorModelos(elemento);
+		var mesh = gestor.getMesh();
 
 		scene.setProvisionalMapa(mesh);
 		scene.setApplicationMode(MyScene.ADDING_OBJECT);
