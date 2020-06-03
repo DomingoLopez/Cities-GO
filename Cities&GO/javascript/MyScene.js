@@ -208,10 +208,6 @@ $(function() {
 
 	$('.elementos-escena button').click(function() {
 		var elemento = $(this).val();
-		var ajusteY = null;
-
-		var mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.5, color: 0x2194ce });
-		var geom = null;
 		var gestor = new GestorModelos(elemento);
 		var mesh = gestor.getMesh();
 

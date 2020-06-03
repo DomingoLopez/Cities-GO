@@ -15,6 +15,8 @@ class Map extends THREE.Object3D {
 		this.objetos = [];
 
 		this.objetoAColocar = null;
+		//Objeto auxiliar helper para la colocación
+		this.helper = null;
 
 		this.raycaster = new THREE.Raycaster(); // RayCaster para selección del suelo
 	}
@@ -33,7 +35,7 @@ class Map extends THREE.Object3D {
 				var geom = new THREE.BoxGeometry(tam_celda, 0.1, 5);
 				var mat = new THREE.MeshBasicMaterial({
 					wireframe: true,
-					transparency: true,
+					transparent: true,
 					opacity: 0.5,
 					color: 0x2194ce
 				});
@@ -98,23 +100,29 @@ class Map extends THREE.Object3D {
 		var surfaces = this.objetos;
 		var pickedObjects = this.raycaster.intersectObjects(surfaces);
 		if (pickedObjects.length > 0) {
-			return pickedObjects[0];
+			return pickedObjects; //Ha de devolver todos los objetos en el rayo, no solo uno
 		} else return null;
 	}
 
 	addProvisional(mesh) {
 		this.objetoAColocar = mesh;
-		//this.objetoAColocar.name = 'provisional';
 		this.add(this.objetoAColocar);
+
+		//Añadimos el helper
+		this.helper = new AssignHelper();
+		this.add(this.helper);
 	}
 
 	escogiendoZona(event) {
 		var celdaEnHover = this.getPointOnGround(event);
-		var objectoEnZona = this.getPointOnObjects(event);
+		var objectosEnZona = this.getPointOnObjects(event);
 
 		if (celdaEnHover != null) {
+
 			this.objetoAColocar.position.x = celdaEnHover.object.position.x;
 			this.objetoAColocar.position.z = celdaEnHover.object.position.z;
+			this.helper.position.x = celdaEnHover.object.position.x;
+			this.helper.position.z = celdaEnHover.object.position.z;
 
 			if (this.celdaActual == null) {
 				var celdaAnterior = celdaEnHover.object;
@@ -133,26 +141,46 @@ class Map extends THREE.Object3D {
 			}
 		}
 
-		if (objectoEnZona != null) {
-			this.objetoAColocar.material.color = new THREE.Color(0xce2121);
+		if (objectosEnZona != null) {
+			
+				var terminado = false;
+				for(var i = 0; i<objectosEnZona.length && !terminado; i++){
+					if(objectosEnZona[i].object.position.x == this.objetoAColocar.position.x &&
+						objectosEnZona[i].object.position.z == this.objetoAColocar.position.z){
+
+						terminado = true;
+
+						}
+				}
+
+				if(terminado){//he entrado en el bucle porque coincide
+					this.helper.setColorError();
+					this.objetoAColocarPermitido = false;
+				}else{
+					this.helper.setColorCorrecto();
+					this.objetoAColocarPermitido = true;
+				}
+
+	
 		} else {
-			this.objetoAColocar.material.color = new THREE.Color(0x2194ce);
+			
+			this.helper.setColorCorrecto();
+			this.objetoAColocarPermitido = true;
 		}
 	}
 
 	addObject(event) {
 		var celdaPickada = this.getPointOnGround(event);
 
-		if (celdaPickada != null) {
-			this.objetoAColocar.material.transparency = false;
-			this.objetoAColocar.material.opacity = 1;
-
+		if (celdaPickada != null && this.objetoAColocarPermitido) {
+			
 			var asignador = new Colores();
 			var color_asociado = asignador.getColorObjeto(this.objetoAColocar);
 			this.objetoAColocar.material.color = new THREE.Color(color_asociado);
 
 			this.objetos.push(this.objetoAColocar);
-			this.objetoAColocar = null;
+
+			this.remove(this.helper);
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
 	}
