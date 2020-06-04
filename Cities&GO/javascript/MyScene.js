@@ -27,15 +27,13 @@ class MyScene extends THREE.Scene {
 		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
 		this.mapa = new Map(this, 50, 50); //Ancho, largo, y tam de cada cuadrado
 		this.add(this.mapa);
-		
-		//Creamos el gestor de Acciones, que será llamado cada vez que se 
+
+		//Creamos el gestor de Acciones, que será llamado cada vez que se
 		//cumpla un evento del ratón o teclado
 		this.gestorAcciones = new GestorAcciones(this, this.mapa);
 
 		//Gestor para detección y acciones de las teclas
 		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
-
-		
 	}
 
 	createCamera() {
@@ -131,7 +129,6 @@ class MyScene extends THREE.Scene {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-
 	onMouseClick(event) {
 		switch (this.applicationMode) {
 			case MyScene.ADDING_OBJECT:
@@ -169,7 +166,7 @@ class MyScene extends THREE.Scene {
 		this.applicationMode = estado;
 	}
 
-	getApplicationMode(){
+	getApplicationMode() {
 		return this.applicationMode;
 	}
 
@@ -228,7 +225,6 @@ $(function() {
 	//Listener para el teclado
 	window.addEventListener('keydown', (event) => scene.gestorTeclado.onKeyDown(event), false);
 
-
 	/**
    * LISTENERS DE MENÚ Y JS EN EL HTML
    */
@@ -237,7 +233,6 @@ $(function() {
 	//Modificamos además el estado de la escena para actuar en función.
 
 	$('.elementos-escena button').click(function() {
-		
 		var elemento = $(this).val();
 		var gestor = new GestorModelos(elemento);
 		var mesh = gestor.getMesh();

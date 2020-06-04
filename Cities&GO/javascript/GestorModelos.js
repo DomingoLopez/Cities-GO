@@ -4,18 +4,10 @@ class GestorModelos {
 		switch (nombre) {
 			case 'cesped':
 				this.mesh = new Cesped();
-				this.mesh.name = 'cesped';
-
-				var ajusteY = 0.25;
-				this.mesh.position.y = ajusteY;
 				break;
 
 			case 'carretera':
 				this.mesh = new Carretera();
-				this.mesh.name = 'carretera';
-
-				var ajusteY = 0.005;
-				this.mesh.position.y = ajusteY;
 				break;
 
 			case 'agua':
@@ -27,11 +19,13 @@ class GestorModelos {
 				break;
 
 			case 'casa':
-				this.mesh = new Casa();
+				this.mesh = new CasaBasica();
 				this.mesh.name = 'casa';
 
-				var ajusteY = 2.5;
-				this.mesh.position.y = ajusteY;
+				this.mesh.scale.x = 1.5;
+				this.mesh.scale.y = 1.5;
+				this.mesh.scale.z = 1.5;
+
 				break;
 
 			/*case 'bloque-pisos':
@@ -43,18 +37,18 @@ class GestorModelos {
 */
 			case 'rascacielos':
 				this.mesh = new Rascacielos();
-				this.mesh.name = 'rascacielos';
-
-				var ajusteY = 7.5;
-				this.mesh.position.y = ajusteY;
 				break;
 		}
-		this.mesh.material.transparency = true;
-		this.mesh.material.opacity = 0.5;
+		//	this.mesh.material.transparency = true;
+		//		this.mesh.material.opacity = 0.5;
 	}
 
 	getMesh() {
 		return this.mesh;
+	}
+
+	getMeshArray() {
+		return this.getMeshArray();
 	}
 
 	getNombre() {

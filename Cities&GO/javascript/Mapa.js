@@ -8,16 +8,11 @@ class Map extends THREE.Object3D {
 		this.largo = largo;
 		this.tam_celda = 5;
 
-
 		//Array de celdas del mapa
 		this.celdas = this.createFieldBox(this.ancho, this.largo, this.tam_celda);
 		//Array de los objetos que hay sobre el mapa
 		this.objetos = [];
-
-
-		
 	}
-
 
 	/**
 	 * Crea el campo sobre el que se va a trabajar
@@ -59,50 +54,46 @@ class Map extends THREE.Object3D {
 	/**
 	 * Devuelve el array de objetos que están sobre el mapa
 	 */
-	getObjetcs(){
+	getObjects() {
 		return this.objetos;
 	}
 
 	/**
 	 * Inserta un objeto en el array de objetos del mapa
 	 */
-	insertObject(mesh){
+	insertObject(mesh) {
 		this.objetos.push(mesh);
 	}
-
 
 	/**
 	 * Borra un objeto del array de objetos del mapa. 
 	 * Limpia también los espacios que puedan quedar con 'undefined' al borrar
 	 */
-	deleteFromObjectsArray(mesh){
-
+	deleteFromObjectsArray(mesh) {
 		var terminado;
-		for(var i = 0; i<this.objetos.length && !terminado; i++){
-			
-			if(mesh == this.objetos[i]){
-				terminado =  true;
+		for (var i = 0; i < this.objetos.length && !terminado; i++) {
+			if (mesh == this.objetos[i]) {
+				terminado = true;
 				delete this.objetos[i];
 			}
 		}
 		//AL HACER DELETE, QUEDAN HUECOS CON UNDEFINED EN EL ARRAY.
 		//SE BORRAN ASÍ
-		var aux = this.objetos.filter(function(limpios){
+		var aux = this.objetos.filter(function(limpios) {
 			return limpios != undefined;
 		});
 
 		this.objetos = aux;
-
 	}
 
 	/**
 	 * Devuelve el array de celdas del mapa
 	 */
-	getCeldas(){
+	getCeldas() {
 		return this.celdas;
 	}
 
-/*
+	/*
 	getEstadoCelda(meshCelda) {
 		if (meshCelda != null) {
 			var campos = meshCelda.name.split('-');
