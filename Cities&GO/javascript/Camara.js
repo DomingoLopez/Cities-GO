@@ -4,7 +4,7 @@ class Camara extends THREE.Object3D {
 
 		this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
 		// También se indica dónde se coloca
-		this.camera.position.set(0, 20, 100);
+		this.camera.position.set(0, 50, 150);
 
 		this.add(this.camera);
 	}

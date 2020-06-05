@@ -27,7 +27,7 @@ class MyScene extends THREE.Scene {
 		//Creamos el mapa, pasándole la escena, el ancho y el largo.
 		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
 		
-		this.mapa = new Mapa(this, 100, 100, this.gui); //Ancho, largo, y tam de cada cuadrado
+		this.mapa = new Mapa(this, 150, 150, this.gui); //Ancho, largo, y tam de cada cuadrado
 		this.add(this.mapa);
 
 		//Creamos Skybox
