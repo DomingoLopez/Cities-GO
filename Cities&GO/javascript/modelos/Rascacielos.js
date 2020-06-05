@@ -35,6 +35,7 @@ class Rascacielos extends THREE.Object3D {
 				new THREE.BoxGeometry(geo, 1, geo),
 				new THREE.MeshPhongMaterial({ color: col })
 			);
+			this.meshArray[i].castShadow = true;
 
 			var ajusteY = i + 0.5;
 			this.meshArray[i].position.y = ajusteY;

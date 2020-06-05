@@ -34,6 +34,10 @@ class MyScene extends THREE.Scene {
 		this.skybox = new SkyBox();
 		this.add(this.skybox);
 
+		//Creamos Sol
+		this.sol = new Sol(this.gui);
+		this.add(this.sol);
+
 		//Creamos el gestor de Acciones, que será llamado cada vez que se
 		//cumpla un evento del ratón o teclado
 		this.gestorAcciones = new GestorAcciones(this, this.mapa);
@@ -58,7 +62,7 @@ class MyScene extends THREE.Scene {
 		//Configuración de los controles de órbita
 		this.cameraControl.minPolarAngle = 0;
 		this.cameraControl.maxPolarAngle = Math.PI/2.1; //El .1 es para que no toque el suelo del todo
-		
+		this.cameraControl.maxDistance = 500;
 		this.cameraControl.update();
 		
 		
@@ -82,6 +86,9 @@ class MyScene extends THREE.Scene {
 		this.guiControls = new function() {
 			// En el contexto de una función   this   alude a la función
 			this.lightIntensity = 0.5;
+			this.ambientIntensity = 0.3;
+			this.spotlightOnOff = false;
+			this.luzHemisferioOnOff = true;
 			this.axisOnOff = true;
 		};
 
@@ -89,7 +96,11 @@ class MyScene extends THREE.Scene {
 		var folder = gui.addFolder('Luz y Ejes');
 
 		// Se le añade un control para la intensidad de la luz
-		folder.add(this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
+		folder.add(this.guiControls, 'ambientIntensity', 0, 0.8, 0.1).name('Ambient int.: ');
+		folder.add(this.guiControls, 'spotlightOnOff').name('Spotlight : ');
+		folder.add(this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Spotlight int.: ');
+		
+		folder.add(this.guiControls, 'luzHemisferioOnOff').name('Luz Hemisferio : ');
 
 		// Y otro para mostrar u ocultar los ejes
 		folder.add(this.guiControls, 'axisOnOff').name('Mostrar ejes : ');
@@ -101,17 +112,25 @@ class MyScene extends THREE.Scene {
 		// La luz ambiental solo tiene un color y una intensidad
 		// Se declara como   var   y va a ser una variable local a este método
 		//    se hace así puesto que no va a ser accedida desde otros métodos
-		var ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
+		this.ambientLight = new THREE.AmbientLight(0xccddee, 0.35);
 		// La añadimos a la escena
-		this.add(ambientLight);
+		this.add(this.ambientLight);
 
 		// Se crea una luz focal que va a ser la luz principal de la escena
 		// La luz focal, además tiene una posición, y un punto de mira
 		// Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
 		// En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-		this.spotLight = new THREE.SpotLight(0xffffff, this.guiControls.lightIntensity);
-		this.spotLight.position.set(60, 60, 40);
+		this.spotLight = new THREE.SpotLight(0xffffff, this.guiControls.lightIntensity, 2000);
+		this.spotLight.position.set(0, 100, -100);
+
+		//Activamos el casteo de sombras en la luz spot
+		this.spotLight.castShadow = true;
 		this.add(this.spotLight);
+
+		//Luz de Hemisferio. Sensación agradable para el cielo
+		this.luzHemisferio = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
+		this.luzHemisferio.position.set( 0, 500, 0 );
+		this.add( this.luzHemisferio );
 	}
 
 	createRenderer(myCanvas) {
@@ -125,6 +144,11 @@ class MyScene extends THREE.Scene {
 
 		// Se establece el tamaño, se aprovecha la totalidad de la ventana del navegador
 		renderer.setSize(window.innerWidth, window.innerHeight);
+
+		//Activamos la gestión de sombras del renderizador
+		renderer.shadowMap.enabled = true;
+		//Le indicamos el typo de sombreado
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;//THREE.PCFSoftShadowMap; // THREE.VSMShadowMap
 
 		// La visualización se muestra en el lienzo recibido
 		$(myCanvas).append(renderer.domElement);
@@ -209,7 +233,10 @@ class MyScene extends THREE.Scene {
 
 		// Se actualizan los elementos de la escena para cada frame
 		// Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
+		this.ambientLight.intensity = this.guiControls.ambientIntensity;
 		this.spotLight.intensity = this.guiControls.lightIntensity;
+		this.spotLight.visible = this.guiControls.spotlightOnOff;
+		this.luzHemisferio.visible = this.guiControls.luzHemisferioOnOff;
 
 		// Se muestran o no los ejes según lo que idique la GUI
 		this.axis.visible = this.guiControls.axisOnOff;
@@ -223,6 +250,7 @@ class MyScene extends THREE.Scene {
 
 		//Actualizamos el mapa
 		this.mapa.update();
+		this.sol.update();
 
 		// Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
 		this.renderer.render(this, this.getCamera());

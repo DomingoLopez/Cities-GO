@@ -49,6 +49,24 @@ class CasaBasica extends THREE.Object3D {
 		this.meshMarcoPuerta.userData = this;
 		this.meshPuerta.userData = this;
 		this.meshTejado.userData = this;
+		this.meshSuelo.userData = this;
+
+		//Añadimos casteo de sombras
+		this.casa.castShadow = true;
+		this.meshVentana1.castShadow = true;
+		this.meshMarcoPuerta.castShadow = true;
+		this.meshPuerta.castShadow = true;
+		this.meshCristal.castShadow = true;
+		this.meshTejado.castShadow = true;
+		this.meshSuelo.castShadow = true;
+
+		this.casa.receiveShadow = true;
+		this.meshVentana1.receiveShadow = true;
+		this.meshMarcoPuerta.receiveShadow = true;
+		this.meshPuerta.receiveShadow = true;
+		this.meshCristal.receiveShadow = true;
+		this.meshTejado.receiveShadow = true;
+		this.meshSuelo.receiveShadow = true;
 
 		this.add(this.casa);
 		this.add(this.meshVentana1);
@@ -65,6 +83,7 @@ class CasaBasica extends THREE.Object3D {
 			this.meshMarcoPuerta,
 			this.meshPuerta,
 			this.meshTejado,
+			this.meshSuelo
 		];
 	}
 

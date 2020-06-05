@@ -20,12 +20,11 @@ class Mapa extends THREE.Object3D {
 
 		//Creamos el terreno restante hasta casi el final del Skybox
 		this.terreno = this.createGround(ancho,largo);
-		this.terreno.receiveShadow = true;
 		this.add(this.terreno);
 
 		//Creamos las guías, por si el usuario quiere verlas
 		this.guias = new THREE.Object3D();
-		this.createGuides(this.ancho, this.largo, this.tam_celda);
+		this.guidesArray = this.createGuides(this.ancho, this.largo, this.tam_celda);
 		this.add(this.guias);
 
 
@@ -54,6 +53,7 @@ class Mapa extends THREE.Object3D {
 				var geom = new THREE.BoxGeometry(tam_celda, 0.1, 5);
 				var mat = new THREE.MeshPhongMaterial(options);
 				var mesh = new THREE.Mesh(geom, mat);
+				mesh.receiveShadow = true;
 
 				mesh.position.x = movX;
 				mesh.position.z = movZ;
@@ -69,12 +69,17 @@ class Mapa extends THREE.Object3D {
 		return matrix;
 	}
 
+
+
+
+
 	/**
 	 * Creamos las guías, por si el usuario las quiere visualizar
 	 */
 
 	createGuides(ancho, largo, tam_celda) {
 
+		var matrix = [];
 		var movZ = 0;
 		var movX = 0;
 
@@ -99,10 +104,12 @@ class Mapa extends THREE.Object3D {
 				mesh.position.z = movZ;
 				mesh.position.y = -0.05;
 				mesh.name = 'guide' + '-' + i + '-' + j + '-' + 'free'; //free y busy son libre ó ocupada
-
+				matrix.push(mesh);
 				this.guias.add(mesh);
 			}
 		}
+
+		return matrix;
 
 	}
 
@@ -115,7 +122,7 @@ class Mapa extends THREE.Object3D {
 		//Hemos de usar nodosBSP.
 
 		
-		var geom1 = new THREE.BoxGeometry(800,0.1,800);
+		var geom1 = new THREE.BoxGeometry(2000,0.1,2000);
 		var geom2 = new THREE.BoxGeometry(ancho,0.1,largo);
 
 	
@@ -128,12 +135,6 @@ class Mapa extends THREE.Object3D {
 
 		//Se realizan las operaciones
 		var resultado = nodoBSP1.subtract(nodoBSP2);
-
-	/* var loader = new THREE.TextureLoader();
-       var textura = loader.load ("../imgs/wood.jpg");
-	   this.ground = new Ground (this, 300, 300, new THREE.MeshPhongMaterial ({map: textura}), 4); 
-	*/
-
 		var mat = new THREE.MeshPhongMaterial({
 			flatShading : false,
 			wireframe : false,
@@ -142,6 +143,7 @@ class Mapa extends THREE.Object3D {
 		});
 		//Se combierte en un mesh
 		var resultadoMesh = resultado.toMesh(mat);
+		resultadoMesh.receiveShadow = true;
 
 		//var resultadoMesh = nodoBSP2.toMesh()
 

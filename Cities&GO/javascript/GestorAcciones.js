@@ -263,7 +263,7 @@ class GestorAcciones {
 			//Simplemente podemos quitar de la escena el objeto a colocar, ponerlo a null y destruir el helper
 			//Finalmente, ponemos de nuevo no action
 			this.mapa.remove(this.objetoAColocar);
-			this.celdaActual.material.wireframe = true; //La celda actual hay que ponerla con su wireframe
+			//this.celdaActual.material.wireframe = true; //La celda actual hay que ponerla con su wireframe
 			this.destroyHelper();
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
