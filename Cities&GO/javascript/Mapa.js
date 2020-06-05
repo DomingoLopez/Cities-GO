@@ -196,14 +196,25 @@ class Mapa extends THREE.Object3D {
 	 * Borra un objeto del array de objetos del mapa. 
 	 * Limpia también los espacios que puedan quedar con 'undefined' al borrar
 	 */
-	deleteFromObjectsArray(mesh) {
+	deleteFromObjectsArray(object3D) {
 		var terminado;
-		for (var i = 0; i < this.objetos.length && !terminado; i++) {
-			if (mesh == this.objetos[i]) {
-				terminado = true;
-				delete this.objetos[i];
+		//Hay que borrar todos los meshes del array de objetos
+		var children = object3D.children;
+
+
+		//A ver si podemos mejorar éste doble for....
+		for(var i = 0; i< children.length; i++){
+			var terminado = false;
+			for (var j = 0; j < this.objetos.length && !terminado; j++) {
+				if (children[i] == this.objetos[j]) {
+					terminado = true;
+					delete this.objetos[j];
+				}
 			}
-		}
+
+
+		}	
+
 		//AL HACER DELETE, QUEDAN HUECOS CON UNDEFINED EN EL ARRAY.
 		//SE BORRAN ASÍ
 		var aux = this.objetos.filter(function(limpios) {

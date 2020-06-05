@@ -44,6 +44,8 @@ class MyScene extends THREE.Scene {
 
 		//Gestor para detección y acciones de las teclas
 		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
+
+
 	}
 
 	createCamera() {

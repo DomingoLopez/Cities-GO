@@ -58,7 +58,7 @@ class GestorAcciones {
      * Como su nombre indica, prepara el escenario para un posible desplazamiento de objetos
      */
 	prepareMOVE(mesh) {
-		this.objetoAColocar = mesh.userData;
+		this.objetoAColocar = mesh;
 		this.mapa.add(this.objetoAColocar);
 
 		//Añadimos el helper
@@ -214,7 +214,7 @@ class GestorAcciones {
 		if (objetoSeleccionado != null) {
 			//Si hemos picado un objeto.
 			//Ahora obtenemos el object3D. Lo dicho, de momento no
-			var objeto = objetoSeleccionado.object;
+			var objeto = objetoSeleccionado.object.userData; //Tenemos el object3D
 
 			//Debemos borrar el objeto del array de objetos de la escena
 			//SI NO, GG
