@@ -1,18 +1,56 @@
 
 /*CSS PARA EL CONTENEDOR DE LA ESCENA*/
+
+
+*{
+    font-family: 'Maven Pro', sans-serif !important;
+    text-decoration: none;
+}
+
+
+
 body{
     margin: 0;
     overflow: hidden; 
 }
 
-#menu-elementos{
-    width: 10%;
+#menu-principal{
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;  
+    margin-top: 30px;
+    width: 20%;
 }
 
-#menu-elementos{
-    padding: 5px;
+.titulo{
+    font-weight: bold;
+    color: firebrick;
 }
 
-.elementos-prueba{
-    text-align: center;
+.elementos-escena{
+    text-align: left;
+}
+
+.btn-categoria{
+    width: 100%;
+}
+
+.grupo-elementos{
+    display: block;
+    margin-top: 10px;
+}
+
+.elemento{
+    width: 90%;
+    margin-top: 5px;
+    padding-bottom: 1px !important;
+    padding-top: 1px !important;
+}
+
+.agrupacion-categoria{
+    margin-bottom: 10px;
+}
+
+.btn{
+    text-align: left !important;
 }

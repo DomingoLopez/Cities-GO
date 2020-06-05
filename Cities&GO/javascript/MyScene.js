@@ -88,7 +88,7 @@ class MyScene extends THREE.Scene {
 			this.lightIntensity = 0.5;
 			this.ambientIntensity = 0.3;
 			this.spotlightOnOff = false;
-			this.luzHemisferioOnOff = true;
+			this.luzHemisferioOnOff = true; //....
 			this.axisOnOff = true;
 		};
 

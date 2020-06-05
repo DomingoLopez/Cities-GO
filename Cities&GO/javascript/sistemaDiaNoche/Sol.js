@@ -51,7 +51,7 @@ class Sol extends THREE.Object3D {
         this.guiControls = new function() {
             // En el contexto de una función   this   alude a la función
             this.diaNoche = false;
-            this.luzSolarOnOff = true;
+            this.luzSolarOnOff = true;//...
             this.velocidadDiaNoche = 0.001;
 
         };

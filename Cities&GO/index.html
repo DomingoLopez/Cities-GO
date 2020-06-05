@@ -7,6 +7,7 @@
     <meta charset="utf-8">
 
     <!--Carga de estilos aplicados a la página. Antes, cargamos estilos de bootstrap-->
+    <link href="https://fonts.googleapis.com/css?family=Maven+Pro&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/style.css">
 
@@ -62,16 +63,29 @@
 
     </div>
     <!-- Div which will show several messages -->
-    <div style="position:absolute; left:100px; top:10px" id="Messages">
-        <div class="cotainer-fluid elementos-escena">
-            <h5>Elementos</h5>
-            
-            <button value="casa">Casa</button>
-            <button value="bloque-pisos">B</button>
-            <button value="rascacielos">Rascacielos</button>
-            <button value="cesped">Cesped</button>
-            <button value="agua">Agua</button>
-            <button value="carretera">Carretera</button>
+    <div style="position:absolute; left:30px; top:10px" id="menu-principal">
+        <div class="container elementos-escena">
+            <h4 class="titulo">Cities<span style="color:rgb(250, 204, 0)"> & </span><span style="color:rgb(9, 255, 0)">GO!</span></h4>
+                <div class="agrupacion-categoria">
+                    <a class="btn btn-secondary btn-categoria" data-toggle="collapse" href="#Edificios" role="button" aria-expanded="false" aria-controls="Edificios">
+                    Edificios
+                    </a>
+                    <div class="collapse grupo-elementos" id="Edificios">
+                        <button class="elemento btn-info btn" value="casa">Casa</button></br>
+                        <button class="elemento btn-info btn" value="rascacielos">Rascacielos</button>
+                    </div>
+                </div>     
+                <div class="agrupacion-categoria">
+                    <a class="btn btn-secondary btn-categoria" data-toggle="collapse" href="#Terrenos" role="button" aria-expanded="false" aria-controls="Edificios">
+                    Terrenos
+                    </a>
+                    <div class="collapse grupo-elementos" id="Terrenos">
+                        <button class="elemento btn-info btn" value="cesped">Cesped</button></br>
+                        <button class="elemento btn-info btn" value="agua">Agua</button>
+                        <button class="elemento btn-info btn" value="carretera">Carretera</button>
+                    </div>
+                </div>  
+
             
         </div>
     </div>
