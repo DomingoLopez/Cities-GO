@@ -6,13 +6,13 @@ class Carretera extends THREE.Object3D {
 		this.colorReal = colorCarretera;
 		this.meshArray = [];
 		this.mesh_1 = new THREE.Mesh(
-			new THREE.BoxGeometry(5, 0.5, 5),
+			new THREE.BoxGeometry(5, 0.1, 5),
 			new THREE.MeshBasicMaterial({ color: colorCarretera })
 		);
 
 		this.mesh_1.name = 'carretera';
 
-		var ajusteY = 0.005;
+		var ajusteY = 0.05;
 		this.mesh_1.position.y = ajusteY;
 
 		this.mesh_1.userData = this;

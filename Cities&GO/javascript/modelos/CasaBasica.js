@@ -64,7 +64,7 @@ class CasaBasica extends THREE.Object3D {
 			this.meshCristal,
 			this.meshMarcoPuerta,
 			this.meshPuerta,
-			this.meshTejado
+			this.meshTejado,
 		];
 	}
 
@@ -176,7 +176,7 @@ class CasaBasica extends THREE.Object3D {
 
 	createSuelo() {
 		var geom = new THREE.BoxGeometry(5 / 1.5, 0.1, 5 / 1.5);
-		var mat = new THREE.MeshBasicMaterial({ color: 0x07ad62 });
+		var mat = new THREE.MeshPhongMaterial({ color: 0xffe0b6 });
 		var mesh = new THREE.Mesh(geom, mat);
 
 		return mesh;

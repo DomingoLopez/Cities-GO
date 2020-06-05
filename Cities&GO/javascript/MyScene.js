@@ -11,6 +11,7 @@ class MyScene extends THREE.Scene {
 		this.renderer = this.createRenderer(myCanvas);
 		//Interfaz
 		this.gui = this.createGUI();
+		
 		//Luces
 		this.createLights();
 		//Camara
@@ -25,8 +26,13 @@ class MyScene extends THREE.Scene {
 
 		//Creamos el mapa, pasándole la escena, el ancho y el largo.
 		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
-		this.mapa = new Map(this, 50, 50); //Ancho, largo, y tam de cada cuadrado
+		
+		this.mapa = new Mapa(this, 100, 100, this.gui); //Ancho, largo, y tam de cada cuadrado
 		this.add(this.mapa);
+
+		//Creamos Skybox
+		this.skybox = new SkyBox();
+		this.add(this.skybox);
 
 		//Creamos el gestor de Acciones, que será llamado cada vez que se
 		//cumpla un evento del ratón o teclado
@@ -41,7 +47,29 @@ class MyScene extends THREE.Scene {
 		// y se controla por teclado
 		this.camara = new Camara();
 		this.camara.lookAt(new THREE.Vector3(0, 0, 0));
+		var look = new THREE.Vector3(0, 0, 0);
 		this.add(this.camara);
+		/**
+		 * AÑADIDO PARA LA CÁMARA. QUITAR SI NO
+		 */
+    
+		// Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
+		this.cameraControl = new THREE.OrbitControls(this.camara.getCamera(), this.renderer.domElement);
+		//Configuración de los controles de órbita
+		this.cameraControl.minPolarAngle = 0;
+		this.cameraControl.maxPolarAngle = Math.PI/2.1; //El .1 es para que no toque el suelo del todo
+		
+		this.cameraControl.update();
+		
+		
+		
+		// Se configuran las velocidades de los movimientos
+		/*this.cameraControl.rotateSpeed = 2;
+		this.cameraControl.zoomSpeed = 2;
+		this.cameraControl.panSpeed = 0.3;
+		// Debe orbitar con respecto al punto de mira de la cámara*/
+		//this.cameraControl.target = look;
+
 	}
 
 	createGUI() {
@@ -55,8 +83,7 @@ class MyScene extends THREE.Scene {
 			// En el contexto de una función   this   alude a la función
 			this.lightIntensity = 0.5;
 			this.axisOnOff = true;
-			this.animacion = false;
-		}();
+		};
 
 		// Se crea una sección para los controles de esta clase
 		var folder = gui.addFolder('Luz y Ejes');
@@ -66,7 +93,6 @@ class MyScene extends THREE.Scene {
 
 		// Y otro para mostrar u ocultar los ejes
 		folder.add(this.guiControls, 'axisOnOff').name('Mostrar ejes : ');
-
 		return gui;
 	}
 
@@ -188,7 +214,15 @@ class MyScene extends THREE.Scene {
 		// Se muestran o no los ejes según lo que idique la GUI
 		this.axis.visible = this.guiControls.axisOnOff;
 
+		/**
+		 * AÑADIDO PARA LA CÁMARA.QUITAR SI NO
+		 */
+		this.cameraControl.update();
+
 		// Se actualiza el resto del modelo
+
+		//Actualizamos el mapa
+		this.mapa.update();
 
 		// Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
 		this.renderer.render(this, this.getCamera());
@@ -235,9 +269,9 @@ $(function() {
 	$('.elementos-escena button').click(function() {
 		var elemento = $(this).val();
 		var gestor = new GestorModelos(elemento);
-		var mesh = gestor.getMesh();
+		var object3D = gestor.getObject3D();
 
-		scene.prepareGestorAcciones(mesh);
+		scene.prepareGestorAcciones(object3D);
 		scene.setApplicationMode(MyScene.ADDING_OBJECT);
 	});
 

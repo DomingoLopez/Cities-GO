@@ -6,11 +6,11 @@ class Cesped extends THREE.Object3D {
 		this.colorReal = colorCesped;
 		this.meshArray = [];
 		this.mesh_1 = new THREE.Mesh(
-			new THREE.BoxGeometry(5, 0.5, 5),
+			new THREE.BoxGeometry(5, 0.1, 5),
 			new THREE.MeshBasicMaterial({ color: colorCesped })
 		);
 
-		var ajusteY = 0.25;
+		var ajusteY = 0.05;
 		this.mesh_1.position.y = ajusteY;
 		this.mesh_1.name = 'cesped';
 

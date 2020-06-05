@@ -1,5 +1,6 @@
 class GestorModelos {
 	constructor(nombre) {
+		//OJO. Aunque se llame mesh, this.mesh es un OBJECT3D
 		this.mesh;
 		switch (nombre) {
 			case 'cesped':
@@ -43,7 +44,7 @@ class GestorModelos {
 		//		this.mesh.material.opacity = 0.5;
 	}
 
-	getMesh() {
+	getObject3D() {
 		return this.mesh;
 	}
 

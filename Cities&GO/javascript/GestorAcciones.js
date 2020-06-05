@@ -5,7 +5,7 @@ class GestorAcciones {
 
 		// RayCaster para selección del suelo
 		this.raycaster = new THREE.Raycaster();
-
+		
 		//Variables para colocar objetcos
 		this.objetoAColocar = null;
 		//Objeto auxiliar helper para la colocación
@@ -135,15 +135,18 @@ class GestorAcciones {
 				var celdaAnterior = celdaEnHover.object;
 				this.celdaActual = celdaAnterior;
 			} else if (celdaEnHover.object != this.celdaActual) {
-				this.celdaActual.material.wireframe = true;
+				//this.celdaActual.material.wireframe = true;
+				this.celdaActual.material.color = new THREE.Color(0xedc799);
 
 				var celdaAnterior = celdaEnHover.object;
 				this.celdaActual = celdaAnterior;
 
-				celdaAnterior.material.wireframe = false;
+				//celdaAnterior.material.wireframe = false;
+				celdaAnterior.material.color = new THREE.Color(0xa07541);
 			} else {
 				//Si son el mismo
-				this.celdaActual.material.wireframe = false;
+				//this.celdaActual.material.wireframe = false;
+				this.celdaActual.material.color = new THREE.Color(0xedc799);
 			}
 		}
 
