@@ -177,18 +177,33 @@ class MyScene extends THREE.Scene {
 	}
 
 	onMouseClick(event) {
-		switch (this.applicationMode) {
-			case MyScene.ADDING_OBJECT:
-				this.gestorAcciones.addObject(event);
-				break;
+		var botonPulsado = event.which;
+		
+		if(botonPulsado == 1){
 
-			case MyScene.SELECTED_OBJECT:
-				this.gestorAcciones.addObject(event);
-				break;
+			switch (this.applicationMode) {
+				case MyScene.ADDING_OBJECT:
+					this.gestorAcciones.addObject(event);
+					break;
 
-			case MyScene.NO_ACTION:
-				this.gestorAcciones.selectObject(event);
-				break;
+				case MyScene.SELECTED_OBJECT:
+					this.gestorAcciones.addObject(event);
+					break;
+
+				case MyScene.NO_ACTION:
+					this.gestorAcciones.selectObject(event);
+					break;
+			}
+		//No me detecta el click derecho
+		}else if(botonPulsado == 3){
+
+			switch (this.applicationMode) {
+				
+				case MyScene.NO_ACTION:
+					this.gestorAcciones.prepareContextMenu(event);
+					break;
+			}
+
 		}
 	}
 

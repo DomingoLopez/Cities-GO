@@ -29,14 +29,14 @@ class Sol extends THREE.Object3D {
 
         var d = 300;
 
-        this.luzSolar.shadowCameraLeft = -d;
-        this.luzSolar.shadowCameraRight = d;
-        this.luzSolar.shadowCameraTop = d;
-        this.luzSolar.shadowCameraBottom = -d;
+        this.luzSolar.shadow.camera.left = -d;
+        this.luzSolar.shadow.camera.right = d;
+        this.luzSolar.shadow.camera.top = d;
+        this.luzSolar.shadow.camera.bottom= -d;
 
-        this.luzSolar.shadowCameraFar = 3500;
-        this.luzSolar.shadowBias = -0.0001;
-        this.luzSolar.shadowDarkness = 0.35;
+        this.luzSolar.shadow.camera.far = 3500;
+        this.luzSolar.shadow.bias = -0.0001;
+        this.luzSolar.shadow.darkness = 0.35;
 
 
         this.add(this.conjuntoSol);
