@@ -232,8 +232,9 @@ class MyScene extends THREE.Scene {
 		return this.applicationMode;
 	}
 
-	prepareGestorAcciones(mesh) {
-		this.gestorAcciones.prepareADD(mesh);
+	prepareGestorAcciones(elemento) {
+
+		this.gestorAcciones.prepareADD(elemento);
 	}
 
 	update() {
@@ -308,10 +309,8 @@ $(function() {
 
 	$('.elementos-escena button').click(function() {
 		var elemento = $(this).val();
-		var gestor = new GestorModelos(elemento);
-		var object3D = gestor.getObject3D();
 
-		scene.prepareGestorAcciones(object3D);
+		scene.prepareGestorAcciones(elemento);
 		scene.setApplicationMode(MyScene.ADDING_OBJECT);
 	});
 

@@ -18,7 +18,8 @@ class GestorTeclado{
 		var ySpeed = 1;
         var rotationSpeed = 0.025;
         
-        var keyCode = event.which;
+		var keyCode = event.which;
+
 
 		switch (keyCode) {
 			/*//w
@@ -65,8 +66,13 @@ class GestorTeclado{
             //SUPRIMIR
             case 46:
 
-                this.gestorAcciones.deleteORcancel();
+                this.gestorAcciones.deleteOBJ();
 
+			break;
+
+			//ESC
+			case 27:
+				this.gestorAcciones.cancelAction();
 			break;
 				
 				//Z, Pero se lanza cundo está el Ctrl pulsado tb

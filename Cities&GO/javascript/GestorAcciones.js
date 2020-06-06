@@ -17,6 +17,9 @@ class GestorAcciones {
 		//Variable auxiliar para trabajar con él
 		this.celdaActual = null;
 
+		//Elemento actual para seguir añadiendo
+		this.elementoActual = null;
+
 
 		/*El gestor de acciones lleva la traza de acciones mediante una clase ActionStack,
 		Una pila que almacena las acciones que se han realizado para poder revertirlas al pulsar
@@ -55,24 +58,27 @@ class GestorAcciones {
 	/**
      * Como su nombre indica, prepara el escenario para la posible inserción de un elemento
      */
-	prepareADD(mesh) {
-		this.objetoAColocar = mesh;
+	prepareADD(elemento) {
+		this.elementoActual = elemento;
 
-		this.mapa.add(this.objetoAColocar);
+		var gestor = new GestorModelos(this.elementoActual);
+		var object3D = gestor.getObject3D();
+
+		this.objetoAColocar = object3D;
+
+		//this.mapa.add(this.objetoAColocar);
 
 		//Añadimos el helper
 		this.reloadHelper();
-		this.mapa.add(this.helper);
+		//this.mapa.add(this.helper);
 	}
 
 	/**
      * Como su nombre indica, prepara el escenario para un posible desplazamiento de objetos
      */
-	prepareMOVE(mesh) {
-		this.objetoAColocar = mesh;
-		this.mapa.add(this.objetoAColocar);
-		//Guardamos las coordenadas del objeto, para
-		//la pila de acciones. 
+	prepareMOVE(obj) {
+		this.objetoAColocar = obj;
+
 		var lastPosition = {
 			posX : this.objetoAColocar.position.x,
 			posZ : this.objetoAColocar.position.z
@@ -154,17 +160,17 @@ class GestorAcciones {
 				this.celdaActual = celdaAnterior;
 			} else if (celdaEnHover.object != this.celdaActual) {
 				//this.celdaActual.material.wireframe = true;
-				//this.celdaActual.material.color = new THREE.Color(0xedc799);
+				this.celdaActual.material.color = new THREE.Color(0xadc986);
 
 				var celdaAnterior = celdaEnHover.object;
 				this.celdaActual = celdaAnterior;
 
 				//celdaAnterior.material.wireframe = false;
-				//celdaAnterior.material.color = new THREE.Color(0xa07541);
+				celdaAnterior.material.color = new THREE.Color(0x235111);
 			} else {
 				//Si son el mismo
 				//this.celdaActual.material.wireframe = false;
-				//this.celdaActual.material.color = new THREE.Color(0xedc799);
+				this.celdaActual.material.color = new THREE.Color(0x235111);
 			}
 		}
 
@@ -172,10 +178,11 @@ class GestorAcciones {
 			var terminado = false;
 			for (var i = 0; i < objectosEnZona.length && !terminado; i++) {
 				if (
-					objectosEnZona[i].object.userData.position.x == this.objetoAColocar.position.x &&
-					objectosEnZona[i].object.userData.position.z == this.objetoAColocar.position.z
+					objectosEnZona[i].object.userData.position.x == celdaEnHover.object.position.x &&
+					objectosEnZona[i].object.userData.position.z == celdaEnHover.object.position.z
 				) {
 					if (objectosEnZona[i].object.userData != this.objetoAColocar) terminado = true;
+					//terminado = true;
 				}
 			}
 
@@ -260,6 +267,7 @@ class GestorAcciones {
 			for (var i = 0; i < array.length; i++) {
 				this.mapa.insertObject(array[i]);
 			}
+			this.mapa.add(this.objetoAColocar);
 			
 
 			/*Una vez añadido el objeto a la escena, debemos introducir la acción
@@ -270,15 +278,20 @@ class GestorAcciones {
 				var action = new Action(Action.INSERTAR, this.objetoAColocar);
 				this.actions.pushAction(action);
 
+				this.prepareADD(this.elementoActual);
+
+
 			}else if(this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT){
 
 				var action = new Action(Action.MOVER, { obj : this.objetoAColocar , lastestCoords : this.lastestObjectCoords});
 				this.actions.pushAction(action);
+				this.scene.setApplicationMode(MyScene.NO_ACTION);
 
 			}
 
-			this.destroyHelper();
-			this.scene.setApplicationMode(MyScene.NO_ACTION);
+			//this.destroyHelper();
+
+			
 
 		}
 	}
@@ -307,11 +320,9 @@ class GestorAcciones {
      * Método que se llama tras recibir una instrucción de suprimir desde el teclado
      * Si hay un objeto seleccionado
      */
-	deleteORcancel() {
+	deleteOBJ() {
 		if (
-			this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT ||
-			this.scene.getApplicationMode() == MyScene.ADDING_OBJECT
-		) {
+			this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT) {
 			//Si hemos seleccionado un objeto, debe estar en this.objetoAColocar
 			//Y además, no está en el array de objetos del mapa, dado que vamos a volver a colocarlo
 			//Simplemente podemos quitar de la escena el objeto a colocar, ponerlo a null y destruir el helper
@@ -322,40 +333,42 @@ class GestorAcciones {
 			this.actions.pushAction(action);
 
 			this.mapa.remove(this.objetoAColocar);
+			//No hace falta que lo borremos porque ya lo borramos al picarlo
+			//this.mapa.deleteFromObjectsArray(this.objetoAColocar);
+			this.celdaActual.material.color = new THREE.Color(0xadc986);
+
+
 			this.destroyHelper();
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
 
-		/*switch(this.scene.getApplicationMode()){
+		
+	}
 
-            case MyScene.SELECTED_OBJECT:
-                //Si hemos seleccionado un objeto, debe estar en this.objetoAColocar
-                //Y además, no está en el array de objetos del mapa, dado que vamos a volver a colocarlo
-                //Simplemente podemos quitar de la escena el objeto a colocar, ponerlo a null y destruir el helper
-                //Finalmente, ponemos de nuevo no action
-                this.mapa.remove(this.objetoAColocar);
-                //La celda actual hay que ponerla con su wireframe
-                this.celdaActual.material.wireframe = true;
-                this.destroyHelper();
-                this.scene.setApplicationMode(MyScene.NO_ACTION);
-                break;
-            
-            case MyScene.ADDING_OBJECT:
-                this.mapa.remove(this.objetoAColocar);
-                //La celda actual hay que ponerla con su wireframe
-                this.celdaActual.material.wireframe = true;
-                this.destroyHelper();
-                this.scene.setApplicationMode(MyScene.NO_ACTION);
-                break;
 
-            case MyScene.NO_ACTION:
-                //Sin implementar. Lo mismo no nos sirve
-                break;
+	/**
+	 * Método que cancela la acción de añadido a la escena
+	 */
+	cancelAction(){
+
+		switch(this.scene.getApplicationMode()){
+
+			case MyScene.ADDING_OBJECT:
+
+				this.mapa.remove(this.objetoAColocar);
+				this.destroyHelper();
+				this.celdaActual.material.color = new THREE.Color(0xadc986);
+				this.scene.setApplicationMode(MyScene.NO_ACTION);
+
+			break;
+
+		};
 
 
 
+		
 
-        }*/
+
 	}
 
 	/**
