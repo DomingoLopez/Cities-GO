@@ -117,11 +117,12 @@ class CasaBasica extends THREE.Object3D {
 		caja.receiveShadow = true;
 
 		var cesped = new Cesped();
-		cesped.userData = this;
-		this.add(cesped);
+		var base = cesped.getMeshBase();
+		base.userData = this;
+		this.add(base);
 
 		this.meshArray = [];
-		this.meshArray.push(cesped);
+		this.meshArray.push(base);
 		this.meshArray.push(cone);
 		this.meshArray.push(caja);
 	}

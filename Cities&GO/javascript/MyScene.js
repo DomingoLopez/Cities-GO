@@ -290,7 +290,8 @@ $(function() {
 	/**
    * LISTENERS DE RATÓN
    */
-	window.addEventListener('click', (event) => scene.onMouseClick(event), true);
+	//CAMBIAR A CLICK SI MOLESTA EL MOUSEDOWN
+	window.addEventListener('mousedown', (event) => scene.onMouseClick(event), true);
 	window.addEventListener('mousemove', (event) => scene.onMouseMove(event), true);
 
 	/**

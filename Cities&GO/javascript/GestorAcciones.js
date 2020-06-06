@@ -10,6 +10,8 @@ class GestorAcciones {
 		this.objetoAColocar = null;
 		//Variable para permitir colocar un objeto
 		this.objetoAColocarPermitido = null;
+		//Variable auxiliar para mostrar el objeto en el mapa
+		this.objectOnScene = false;
 		//Objeto auxiliar helper para la colocación
 		this.helper = new AssignHelper();
 		//Booleano para saber si el helper está en uso y no volver a pintarlo
@@ -60,6 +62,7 @@ class GestorAcciones {
      */
 	prepareADD(elemento) {
 		this.elementoActual = elemento;
+		this.objectOnScene = false;
 
 		var gestor = new GestorModelos(this.elementoActual);
 		var object3D = gestor.getObject3D();
@@ -69,7 +72,7 @@ class GestorAcciones {
 		//this.mapa.add(this.objetoAColocar);
 
 		//Añadimos el helper
-		this.reloadHelper();
+		//this.reloadHelper();
 		//this.mapa.add(this.helper);
 	}
 
@@ -78,6 +81,7 @@ class GestorAcciones {
      */
 	prepareMOVE(obj) {
 		this.objetoAColocar = obj;
+		this.objectOnScene = true;
 
 		var lastPosition = {
 			posX : this.objetoAColocar.position.x,
@@ -89,6 +93,7 @@ class GestorAcciones {
 
 		this.setHelper(this.objetoAColocar);
 		this.mapa.add(this.helper);
+		this.helperOnScene = true;
 	}
 
 	/*
@@ -155,9 +160,21 @@ class GestorAcciones {
 			this.helper.position.x = celdaEnHover.object.position.x;
 			this.helper.position.z = celdaEnHover.object.position.z;
 
+			if(!this.helperOnScene){
+				this.mapa.add(this.helper);
+				this.helperOnScene = true;
+			}
+
+			if(!this.objectOnScene){
+				this.mapa.add(this.objetoAColocar);
+				this.objectOnScene = true;
+			}
+
 			if (this.celdaActual == null) {
+
 				var celdaAnterior = celdaEnHover.object;
 				this.celdaActual = celdaAnterior;
+
 			} else if (celdaEnHover.object != this.celdaActual) {
 				//this.celdaActual.material.wireframe = true;
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
@@ -259,15 +276,13 @@ class GestorAcciones {
 		var celdaPickada = this.getPointOnGround(event);
 
 		if (celdaPickada != null && this.objetoAColocarPermitido) {
-			//var asignador = new Colores();
-			//var color_asociado = asignador.getColorObjeto(this.objetoAColocar);
-			//this.objetoAColocar.material.color = new THREE.Color(color_asociado);
 
 			var array = this.objetoAColocar.getMeshArray();
 			for (var i = 0; i < array.length; i++) {
 				this.mapa.insertObject(array[i]);
 			}
-			this.mapa.add(this.objetoAColocar);
+			//this.mapa.add(this.objetoAColocar);
+			celdaPickada.object.material.color = new THREE.Color(0xadc986);
 			
 
 			/*Una vez añadido el objeto a la escena, debemos introducir la acción
@@ -280,10 +295,20 @@ class GestorAcciones {
 
 				this.prepareADD(this.elementoActual);
 
+				//Ésto evitará dobles picados sin querer
+				this.objetoAColocarPermitido = false
+				this.helper.setColorError();
+
 
 			}else if(this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT){
 
-				var action = new Action(Action.MOVER, { obj : this.objetoAColocar , lastestCoords : this.lastestObjectCoords});
+				var actualCoords = {
+					posX : this.objetoAColocar.position.x,
+					posZ : this.objetoAColocar.position.z
+				};
+
+
+				var action = new Action(Action.MOVER, { obj : this.objetoAColocar , lastestCoords : this.lastestObjectCoords, actualCoords: actualCoords});
 				this.actions.pushAction(action);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
 
@@ -375,17 +400,18 @@ class GestorAcciones {
 	  * Método que se ejecuta cuando se pulsa Ctrl + Z, y que saca de la pila la última acción realizada
 	  * para revertirla
 	  */
-	 reverseAction(){
+	 unDoAction(){
 		//De momento sólo lo vamos a permitir cuando no se estén realizando acciones
 		if(this.scene.getApplicationMode() == MyScene.NO_ACTION){
 
-			var pilaVacia =  this.actions.empty();
-			
-			if(!pilaVacia){
+			if(!this.actions.empty()){
 
 				var accion = this.actions.popAction();
 				var tipo = accion.getType();
 				var options = accion.getOptions();
+
+				//Una vez sacad la acción, la metemos en la pila del rehacer
+				this.actions.pushActionInverse(accion);
 
 
 
@@ -414,12 +440,76 @@ class GestorAcciones {
 			}
 
 
+		}else if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT){
+
+			this.cancelAction();
+
 		}
 
 	}
 
 
+	reDoAction(){
 
+		if(this.scene.getApplicationMode() == MyScene.NO_ACTION){
+
+			if(!this.actions.emptyInverse()){
+
+				var accion = this.actions.popActionInverse();
+				var tipo = accion.getType();
+				var options = accion.getOptions();
+
+				//Una vez sacad la acción, la metemos en la pila del rehacer
+				this.actions.pushAction(accion);
+
+
+
+				switch(tipo){
+					//Si la acción desecha era insertar, ahora hay que insertarlo
+					case Action.INSERTAR : 
+						//En options tenemos object3D. Solo tenemos que eliminarlo de la escena y borrarlo del mapa
+						this.mapa.add(options);
+						var child = options.children;
+
+						for(var i = 0; i<child.length; i++){
+							this.mapa.insertObject(child[i]);
+						}
+
+					break;
+					//Si la acción desecha era mover, ahora hay que moverlo a su posición correcta
+					case Action.MOVER : 
+						var posX = options.actualCoords.posX;
+						var posZ = options.actualCoords.posZ;
+
+						var obj = options.obj;
+						obj.position.x = posX;
+						obj.position.z = posZ;
+
+					break;
+
+				};
+
+
+
+
+			}
+
+		}else if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT){
+
+			this.cancelAction();
+
+		}
+
+
+
+
+
+
+
+
+
+
+	}
 
 
 

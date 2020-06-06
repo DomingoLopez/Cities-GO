@@ -19,6 +19,7 @@ class GestorTeclado{
         var rotationSpeed = 0.025;
         
 		var keyCode = event.which;
+		//console.log(keyCode);
 
 
 		switch (keyCode) {
@@ -80,7 +81,16 @@ class GestorTeclado{
 				
 				if(event.ctrlKey){
 					//Si tenemos pulsado la tecla Ctrl + Z, debemos revertir la acción anterior
-					this.gestorAcciones.reverseAction();
+					this.gestorAcciones.unDoAction();
+				}
+
+			break;
+
+			case 88:
+				
+				if(event.ctrlKey){
+					//Si tenemos pulsado la tecla Ctrl + Z, debemos revertir la acción anterior
+					this.gestorAcciones.reDoAction();
 				}
 
 			break;
