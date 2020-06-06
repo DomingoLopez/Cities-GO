@@ -61,7 +61,22 @@ class GestorAcciones {
      * Como su nombre indica, prepara el escenario para la posible inserción de un elemento
      */
 	prepareADD(elemento) {
+
 		this.elementoActual = elemento;
+
+		/**
+		 * Hemos de hacer la comprobación siguiente, dado que puede ser que el usuario 
+		 * sin terminar la acción pertinente seleccione otro elemento a elegir,
+		 * lo que provocaría fallos. (No se elimina el objeto anterior en la escena, etc)
+		 * Por eso, hemos de hacer ésta comprobación
+		 */
+		if(this.objectOnScene){
+			this.mapa.remove(this.objetoAColocar);
+			this.objetoAColocar =  null;
+			this.helperOnScene = false;
+			this.mapa.remove(this.helper);
+			this.celdaActual.material.color = new THREE.Color(0xadc986);
+		}
 		this.objectOnScene = false;
 
 		var gestor = new GestorModelos(this.elementoActual);
@@ -69,12 +84,8 @@ class GestorAcciones {
 
 		this.objetoAColocar = object3D;
 
-		//this.mapa.add(this.objetoAColocar);
-
-		//Añadimos el helper
-		//this.reloadHelper();
-		//this.mapa.add(this.helper);
 	}
+
 
 	/**
      * Como su nombre indica, prepara el escenario para un posible desplazamiento de objetos
@@ -292,7 +303,7 @@ class GestorAcciones {
 
 				var action = new Action(Action.INSERTAR, this.objetoAColocar);
 				this.actions.pushAction(action);
-
+				this.objectOnScene = false;
 				this.prepareADD(this.elementoActual);
 
 				//Ésto evitará dobles picados sin querer
