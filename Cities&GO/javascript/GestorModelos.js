@@ -23,10 +23,6 @@ class GestorModelos {
 				this.mesh = new CasaBasica();
 				this.mesh.name = 'casa';
 
-				this.mesh.scale.x = 1.5;
-				this.mesh.scale.y = 1.5;
-				this.mesh.scale.z = 1.5;
-
 				break;
 
 			/*case 'bloque-pisos':
@@ -39,7 +35,36 @@ class GestorModelos {
 			case 'rascacielos':
 				this.mesh = new Rascacielos();
 				break;
+
+			case 'pinos':
+				this.mesh = new Pinos();
+				break;
+
+			case 'arboles':
+				this.mesh = new Arboles();
+				break;
+
+			case 'acera':
+				this.mesh = new Acera();
+				break;
+
+			case 'farola':
+				this.mesh = new AceraFarola();
+				break;
+
+			case 'giro':
+				this.mesh = new CarreteraGiro();
+				break;
+
+			case 'cruce':
+				this.mesh = new CarreteraCruce();
+				break;
+
+			case 'arena':
+				this.mesh = new Arena();
+				break;
 		}
+
 		//	this.mesh.material.transparency = true;
 		//		this.mesh.material.opacity = 0.5;
 	}

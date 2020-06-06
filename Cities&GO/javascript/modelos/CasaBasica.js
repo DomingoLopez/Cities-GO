@@ -1,7 +1,7 @@
 class CasaBasica extends THREE.Object3D {
 	constructor() {
 		super();
-
+		/*
 		//Casa
 		var geom = new THREE.BoxGeometry(2, 2, 3);
 		var mat = new THREE.MeshPhongMaterial({ color: 0xffffff });
@@ -84,7 +84,46 @@ class CasaBasica extends THREE.Object3D {
 			this.meshPuerta,
 			this.meshTejado,
 			this.meshSuelo
-		];
+		];*/
+
+		var shape = new THREE.Shape();
+		shape.lineTo(1.8, 0);
+		shape.lineTo(0, 1);
+		shape.lineTo(-1.8, 0);
+		var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+		var extrudeSettings = {
+			steps: 1,
+			depth: 4,
+			bevelEnabled: false
+		};
+		var geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+		var cone = new THREE.Mesh(geo, material);
+		cone.position.z = -2;
+		cone.position.y = 2;
+
+		this.add(cone);
+
+		material = new THREE.MeshPhongMaterial({ color: 0xeeeeee });
+		var caja = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 3), material);
+		this.add(caja);
+
+		cone.userData = this;
+		caja.userData = this;
+
+		cone.castShadow = true;
+		cone.receiveShadow = true;
+		caja.castShadow = true;
+		caja.receiveShadow = true;
+
+		var cesped = new Cesped();
+		cesped.userData = this;
+		this.add(cesped);
+
+		this.meshArray = [];
+		this.meshArray.push(cesped);
+		this.meshArray.push(cone);
+		this.meshArray.push(caja);
 	}
 
 	getMeshArray() {

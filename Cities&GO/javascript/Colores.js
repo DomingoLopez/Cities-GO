@@ -16,6 +16,14 @@ class Colores {
 		return 0x000000;
 	}
 
+	getColorArena() {
+		return 0xfff755;
+	}
+
+	getColorAcera() {
+		return 0x777777;
+	}
+
 	getRandomCasa() {
 		var random = Math.floor(Math.random() * this.colores_casa.length);
 		return this.colores_casa[random];

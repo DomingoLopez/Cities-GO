@@ -11,7 +11,7 @@ class MyScene extends THREE.Scene {
 		this.renderer = this.createRenderer(myCanvas);
 		//Interfaz
 		this.gui = this.createGUI();
-		
+
 		//Luces
 		this.createLights();
 		//Camara
@@ -26,7 +26,7 @@ class MyScene extends THREE.Scene {
 
 		//Creamos el mapa, pasándole la escena, el ancho y el largo.
 		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
-		
+
 		this.mapa = new Mapa(this, 150, 150, this.gui); //Ancho, largo, y tam de cada cuadrado
 		this.add(this.mapa);
 
@@ -44,8 +44,6 @@ class MyScene extends THREE.Scene {
 
 		//Gestor para detección y acciones de las teclas
 		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
-
-
 	}
 
 	createCamera() {
@@ -58,24 +56,21 @@ class MyScene extends THREE.Scene {
 		/**
 		 * AÑADIDO PARA LA CÁMARA. QUITAR SI NO
 		 */
-    
+
 		// Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
 		this.cameraControl = new THREE.OrbitControls(this.camara.getCamera(), this.renderer.domElement);
 		//Configuración de los controles de órbita
 		this.cameraControl.minPolarAngle = 0;
-		this.cameraControl.maxPolarAngle = Math.PI/2.1; //El .1 es para que no toque el suelo del todo
+		this.cameraControl.maxPolarAngle = Math.PI / 2.1; //El .1 es para que no toque el suelo del todo
 		this.cameraControl.maxDistance = 500;
 		this.cameraControl.update();
-		
-		
-		
+
 		// Se configuran las velocidades de los movimientos
 		/*this.cameraControl.rotateSpeed = 2;
 		this.cameraControl.zoomSpeed = 2;
 		this.cameraControl.panSpeed = 0.3;
 		// Debe orbitar con respecto al punto de mira de la cámara*/
 		//this.cameraControl.target = look;
-
 	}
 
 	createGUI() {
@@ -92,7 +87,7 @@ class MyScene extends THREE.Scene {
 			this.spotlightOnOff = false;
 			this.luzHemisferioOnOff = true; //....
 			this.axisOnOff = true;
-		};
+		}();
 
 		// Se crea una sección para los controles de esta clase
 		var folder = gui.addFolder('Luz y Ejes');
@@ -101,7 +96,7 @@ class MyScene extends THREE.Scene {
 		folder.add(this.guiControls, 'ambientIntensity', 0, 0.8, 0.1).name('Ambient int.: ');
 		folder.add(this.guiControls, 'spotlightOnOff').name('Spotlight : ');
 		folder.add(this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Spotlight int.: ');
-		
+
 		folder.add(this.guiControls, 'luzHemisferioOnOff').name('Luz Hemisferio : ');
 
 		// Y otro para mostrar u ocultar los ejes
@@ -130,9 +125,9 @@ class MyScene extends THREE.Scene {
 		this.add(this.spotLight);
 
 		//Luz de Hemisferio. Sensación agradable para el cielo
-		this.luzHemisferio = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.5 );
-		this.luzHemisferio.position.set( 0, 500, 0 );
-		this.add( this.luzHemisferio );
+		this.luzHemisferio = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
+		this.luzHemisferio.position.set(0, 500, 0);
+		this.add(this.luzHemisferio);
 	}
 
 	createRenderer(myCanvas) {
@@ -150,7 +145,7 @@ class MyScene extends THREE.Scene {
 		//Activamos la gestión de sombras del renderizador
 		renderer.shadowMap.enabled = true;
 		//Le indicamos el typo de sombreado
-		renderer.shadowMap.type = THREE.PCFSoftShadowMap;//THREE.PCFSoftShadowMap; // THREE.VSMShadowMap
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap; //THREE.PCFSoftShadowMap; // THREE.VSMShadowMap
 
 		// La visualización se muestra en el lienzo recibido
 		$(myCanvas).append(renderer.domElement);

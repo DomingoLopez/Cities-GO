@@ -25,14 +25,30 @@
 
     <!--Cargamos JS de nuestro proyecto-->
     <script type="text/javascript" src="./javascript/main.js"></script>
+
+    <!--Helpers-->
     <script type="text/javascript" src="./javascript/AssignHelper.js"></script> 
     <script type="text/javascript" src="./javascript/Colores.js"></script> 
+
+    <!--Modelos-->
+    <script type="text/javascript" src="./javascript/modelos/Arena.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Acera.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Farola.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/AceraFarola.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Arbol.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Arboles.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Pino.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/Pinos.js"></script>
     <script type="text/javascript" src="./javascript/modelos/CasaBasica.js"></script> 
-    <script type="text/javascript" src="./javascript/modelos/Agua.js"></script> 
+    <script type="text/javascript" src="./javascript/modelos/Agua.js"></script>
+    <script type="text/javascript" src="./javascript/modelos/CarreteraCruce.js"></script> 
+    <script type="text/javascript" src="./javascript/modelos/CarreteraGiro.js"></script>
     <script type="text/javascript" src="./javascript/modelos/Carretera.js"></script> 
     <script type="text/javascript" src="./javascript/modelos/Cesped.js"></script> 
     <script type="text/javascript" src="./javascript/modelos/Rascacielos.js"></script> 
     <script type="text/javascript" src="./javascript/modelos/Casa.js"></script> 
+
+    <!--Resto-->
     <script type="text/javascript" src="./javascript/GestorModelos.js"></script> 
     <script type="text/javascript" src="./javascript/Camara.js"></script>
     <script type="text/javascript" src="./javascript/sistemaDiaNoche/SkyBox.js"></script>
@@ -82,9 +98,31 @@
                     <div class="collapse grupo-elementos" id="Terrenos">
                         <button class="elemento btn-info btn" value="cesped">Cesped</button></br>
                         <button class="elemento btn-info btn" value="agua">Agua</button>
-                        <button class="elemento btn-info btn" value="carretera">Carretera</button>
+                        <button class="elemento btn-info btn" value="arena">Arena</button>
                     </div>
-                </div>  
+                </div> 
+                <div class="agrupacion-categoria">
+                    <a class="btn btn-secondary btn-categoria" data-toggle="collapse" href="#Flora" role="button" aria-expanded="false" aria-controls="Edificios">
+                    Flora
+                    </a>
+                    <div class="collapse grupo-elementos" id="Flora">
+                        <button class="elemento btn-info btn" value="pinos">Pinos</button></br>
+                        <button class="elemento btn-info btn" value="arboles">Arboles</button>
+                    </div>
+                </div>
+                <div class="agrupacion-categoria">
+                    <a class="btn btn-secondary btn-categoria" data-toggle="collapse" href="#Calle" role="button" aria-expanded="false" aria-controls="Edificios">
+                    Calle
+                    </a>
+                    <div class="collapse grupo-elementos" id="Calle">
+                        <button class="elemento btn-info btn" value="acera">Acera</button></br>
+                        <button class="elemento btn-info btn" value="farola">Farola</button></br>
+                        <button class="elemento btn-info btn" value="carretera">Carretera</button></br>
+                        <button class="elemento btn-info btn" value="giro">Giro Carretera</button></br>
+                        <button class="elemento btn-info btn" value="cruce">Cruce Carretera</button>
+                    </div>
+                    </div>
+                </div>    
 
             
         </div>

@@ -1,18 +1,18 @@
-class Cesped extends THREE.Object3D {
+class Acera extends THREE.Object3D {
 	constructor() {
 		super();
 		var c = new Colores();
-		var colorCesped = c.getColorCesped();
-		this.colorReal = colorCesped;
+		var colorAcera = c.getColorAcera();
+		this.colorReal = colorAcera;
 		this.meshArray = [];
 		this.mesh_1 = new THREE.Mesh(
-			new THREE.BoxGeometry(5, 0.1, 5),
-			new THREE.MeshPhongMaterial({ color: colorCesped })
+			new THREE.BoxGeometry(5, 0.5, 5),
+			new THREE.MeshPhongMaterial({ color: colorAcera })
 		);
 
-		var ajusteY = 0.05;
+		var ajusteY = 0.25;
 		this.mesh_1.position.y = ajusteY;
-		this.mesh_1.name = 'cesped';
+		this.mesh_1.name = 'acera';
 		this.mesh_1.receiveShadow = true;
 
 		this.mesh_1.userData = this;

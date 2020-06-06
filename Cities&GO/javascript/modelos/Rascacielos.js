@@ -20,7 +20,8 @@ class Rascacielos extends THREE.Object3D {
 	}
 
 	generarRascacielos() {
-		var random = Math.floor(Math.random() * 3) * 2 + 12;
+		//var random = Math.floor(Math.random() * 3) * 2 + 12;
+		var random = 12;
 		var c = new Colores();
 		this.colorRascacielos = c.getRandomRasca();
 		for (var i = 0; i < random; i++) {
@@ -28,7 +29,7 @@ class Rascacielos extends THREE.Object3D {
 			var geo = 5;
 			if (i % 2 === 0) {
 				geo = 4.5;
-				col = 0x777777;
+				col = 0xeeeeee;
 			}
 
 			this.meshArray[i] = new THREE.Mesh(
