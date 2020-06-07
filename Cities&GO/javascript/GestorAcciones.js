@@ -392,6 +392,8 @@ class GestorAcciones {
 			case MyScene.ADDING_OBJECT:
 
 				this.mapa.remove(this.objetoAColocar);
+				//Evitamos que salga de color rojo
+				this.helper.setColorCorrecto();
 				this.destroyHelper();
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
