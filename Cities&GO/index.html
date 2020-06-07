@@ -20,6 +20,7 @@
     <script type="text/javascript" src="../libs/ThreeBSP.js"></script>
 
     <!--Cargamos librerías específicas de nuestro desarrollo. Incluímos popper y bootstrap-->
+    <script src="https://kit.fontawesome.com/ad1626ec22.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
@@ -81,9 +82,9 @@
 
     </div>
     <!-- Div which will show several messages -->
-    <div style="position:absolute; left:30px; top:10px" id="menu-principal">
+    <div id="menu-principal">
         <div class="container elementos-escena">
-            <h4 class="titulo">Cities<span style="color:rgb(250, 204, 0)"> & </span><span style="color:rgb(9, 255, 0)">GO!</span></h4>
+            <h4 class="titulo float-left">Cities<span style="color:rgb(250, 204, 0)"> & </span><span style="color:rgb(9, 255, 0)">GO!</span></h4><a href="javascript:void(0)" class="float-right ayuda">Help!</a>
                 <div class="agrupacion-categoria">
                     <a class="btn btn-secondary btn-categoria" data-toggle="collapse" href="#Edificios" role="button" aria-expanded="false" aria-controls="Edificios">
                     Edificios
@@ -126,14 +127,15 @@
                 </div>
             
         </div>
-        <div>
-            <h5>Provisional</h5>
-            <p>r -> Rotar obj. Válido si se está añadiendo o seleccionando</p>
-            <p>Ctrl+z = deshacer</p>
-            <p>Ctrl+x = rehacer</p>
-            <p>ESC -> Salir del modo añadirOBJ</p>
-            <p>SUP -> Borrar obj seleccionado</p>
-        </div>
+    </div>
+    <div id="div-ayuda" class="clearfix">
+        <h5 class="float-left titulo-ayuda">Ayuda<span style="color:rgb(250, 204, 0)"> & </span><span style="color:rgb(9, 255, 0)">Shortcuts</span></h5><span class="cerrar-ayuda float-right">&times;</span>
+        </br></br>
+        <p>ctrl + z : Deshacer</p>
+        <p>ctrl + x : Rehacer</p>
+        <p>ESC : Cancelar acción</p>
+        <p>SUP : Borrar obj. seleccionado</p>
+        <p>r : Rotar objeto</p>
     </div>
 
     

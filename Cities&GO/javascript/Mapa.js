@@ -199,7 +199,7 @@ class Mapa extends THREE.Object3D {
 	deleteFromObjectsArray(object3D) {
 		var terminado;
 		//Hay que borrar todos los meshes del array de objetos
-		var children = object3D.children;
+		var children = object3D.getMeshArray();
 
 
 		//A ver si podemos mejorar éste doble for....

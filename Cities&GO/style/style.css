@@ -15,6 +15,10 @@ body{
 }
 
 #menu-principal{
+    position:absolute; 
+    left:2.5%; 
+    top:10px;
+
     background-color: #ffffff;
     border-radius: 10px;
     padding: 10px;  
@@ -53,4 +57,41 @@ body{
 
 .btn{
     text-align: left !important;
+}
+
+
+/*DIV DE AYUDA*/
+#div-ayuda{
+    position:absolute; 
+    left:23%; 
+    top:10px;
+
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;  
+    margin-top: 30px;
+    width: 20%;
+    display: none;
+}
+
+.ayuda{
+    display: inline;
+}
+
+.cerrar-ayuda{
+    font-size: 20px;
+    border-radius: 50px;
+    width: 30px;
+    text-align: center;
+    height: 30px;
+    background-color: red;
+}
+
+.cerrar-ayuda:hover{
+    cursor: pointer;
+}
+
+.titulo-ayuda{
+    font-weight: bold;
+    color: firebrick;
 }

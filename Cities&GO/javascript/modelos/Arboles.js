@@ -39,7 +39,6 @@ class Arboles extends THREE.Object3D {
 				mesh.push(nuevo_mesh);
 			}
 		}
-		console.log(mesh);
 		return mesh;
 	}
 

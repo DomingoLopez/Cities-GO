@@ -400,6 +400,28 @@ class GestorAcciones {
 
 			break;
 
+			case MyScene.SELECTED_OBJECT:
+
+				this.objetoAColocar.position.x = this.lastestObjectCoords.posX;
+				this.objetoAColocar.position.z = this.lastestObjectCoords.posZ;
+
+				//Volvemos a insertar el objeto
+				var array = this.objetoAColocar.getMeshArray();
+				for (var i = 0; i < array.length; i++) {
+					this.mapa.insertObject(array[i]);
+				}
+				this.objectOnScene = false;
+				//this.helperOnScene = false;
+
+
+				//Evitamos que salga de color rojo
+				this.helper.setColorCorrecto();
+				this.destroyHelper();
+				this.celdaActual.material.color = new THREE.Color(0xadc986);
+				this.scene.setApplicationMode(MyScene.NO_ACTION);
+
+			break;
+
 		};
 
 
@@ -482,7 +504,7 @@ class GestorAcciones {
 					case Action.INSERTAR : 
 						//En options tenemos object3D. Solo tenemos que eliminarlo de la escena y borrarlo del mapa
 						this.mapa.add(options);
-						var child = options.children;
+						var child = options.getMeshArray();
 
 						for(var i = 0; i<child.length; i++){
 							this.mapa.insertObject(child[i]);

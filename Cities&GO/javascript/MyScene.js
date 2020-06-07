@@ -194,15 +194,6 @@ class MyScene extends THREE.Scene {
 					this.gestorAcciones.selectObject(event);
 					break;
 			}
-		//No me detecta el click derecho
-		}else if(botonPulsado == 3){
-
-			switch (this.applicationMode) {
-				
-				case MyScene.NO_ACTION:
-					this.gestorAcciones.prepareContextMenu(event);
-					break;
-			}
 
 		}
 	}
