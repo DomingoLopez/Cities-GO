@@ -318,6 +318,9 @@ class GestorAcciones {
 					posZ : this.objetoAColocar.position.z
 				};
 
+				this.objectOnScene = false;
+				this.objetoAColocarPermitido = false;
+
 
 				var action = new Action(Action.MOVER, { obj : this.objetoAColocar , lastestCoords : this.lastestObjectCoords, actualCoords: actualCoords});
 				this.actions.pushAction(action);
