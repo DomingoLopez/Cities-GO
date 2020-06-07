@@ -86,48 +86,28 @@ class CasaBasica extends THREE.Object3D {
 			this.meshSuelo
 		];*/
 
-		var shape = new THREE.Shape();
-		shape.lineTo(1.8, 0);
-		shape.lineTo(0, 1);
-		shape.lineTo(-1.8, 0);
-		var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
-		var extrudeSettings = {
-			steps: 1,
-			depth: 4,
-			bevelEnabled: false
-		};
-		var geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-
-		var cone = new THREE.Mesh(geo, material);
-		cone.position.z = -2;
-		cone.position.y = 2;
-
-		this.add(cone);
-
-		material = new THREE.MeshPhongMaterial({ color: 0xeeeeee });
-		var caja = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 3), material);
-		this.add(caja);
-
-		cone.userData = this;
-		caja.userData = this;
-
-		cone.castShadow = true;
-		cone.receiveShadow = true;
-		caja.castShadow = true;
-		caja.receiveShadow = true;
-
 		var cesped = new Cesped();
-		cesped.userData = this;
+		var casa = new Casa();
 		this.add(cesped);
+		this.add(casa);
 
 		this.meshArray = [];
 		this.meshArray.push(cesped);
-		this.meshArray.push(cone);
-		this.meshArray.push(caja);
+		this.meshArray.push(casa);
 	}
 
 	getMeshArray() {
-		return this.meshArray;
+		var mesh = [];
+		for (var i = 0; i < this.meshArray.length; i++) {
+			var cadaMesh = this.meshArray[i].getMeshArray();
+			for (var j = 0; j < cadaMesh.length; j++) {
+				var nuevo_mesh = cadaMesh[j];
+				nuevo_mesh.userData = this;
+				mesh.push(nuevo_mesh);
+			}
+		}
+		console.log(mesh);
+		return mesh;
 	}
 
 	createVentana() {

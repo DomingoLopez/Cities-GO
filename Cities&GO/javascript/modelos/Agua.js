@@ -27,22 +27,14 @@ class Agua extends THREE.Object3D {
 
 		var ajusteY = 0.05;
 		this.mesh_1.position.y = ajusteY;
-		this.mesh_1.name = 'Agua';
+		this.mesh_1.name = 'agua';
 
 		this.mesh_1.userData = this;
 		this.add(this.mesh_1);
 		this.meshArray.push(this.mesh_1);
 	}
 
-	getMeshBase() {
-		return this.meshArray[0];
-	}
-
 	getMeshArray() {
 		return this.meshArray;
-	}
-
-	getColorReal() {
-		return this.colorReal;
 	}
 }

@@ -78,15 +78,7 @@ class CarreteraCruce extends THREE.Object3D {
 		this.meshArray.push(this.acera4);
 	}
 
-	getMeshBase() {
-		return this.meshArray[0];
-	}
-
 	getMeshArray() {
 		return this.meshArray;
-	}
-
-	getColorReal() {
-		return this.colorReal;
 	}
 }

@@ -48,15 +48,7 @@ class Carretera extends THREE.Object3D {
 		this.meshArray.push(this.acera_2);
 	}
 
-	getMeshBase() {
-		return this.meshArray[0];
-	}
-
 	getMeshArray() {
 		return this.meshArray;
-	}
-
-	getColorReal() {
-		return this.colorReal;
 	}
 }

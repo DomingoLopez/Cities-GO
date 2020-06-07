@@ -66,15 +66,7 @@ class CarreteraGiro extends THREE.Object3D {
 		this.meshArray.push(this.acera_3);
 	}
 
-	getMeshBase() {
-		return this.meshArray[0];
-	}
-
 	getMeshArray() {
 		return this.meshArray;
-	}
-
-	getColorReal() {
-		return this.colorReal;
 	}
 }
