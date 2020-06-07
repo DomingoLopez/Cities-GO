@@ -177,18 +177,33 @@ class MyScene extends THREE.Scene {
 	}
 
 	onMouseClick(event) {
-		switch (this.applicationMode) {
-			case MyScene.ADDING_OBJECT:
-				this.gestorAcciones.addObject(event);
-				break;
+		var botonPulsado = event.which;
+		
+		if(botonPulsado == 1){
 
-			case MyScene.SELECTED_OBJECT:
-				this.gestorAcciones.addObject(event);
-				break;
+			switch (this.applicationMode) {
+				case MyScene.ADDING_OBJECT:
+					this.gestorAcciones.addObject(event);
+					break;
 
-			case MyScene.NO_ACTION:
-				this.gestorAcciones.selectObject(event);
-				break;
+				case MyScene.SELECTED_OBJECT:
+					this.gestorAcciones.addObject(event);
+					break;
+
+				case MyScene.NO_ACTION:
+					this.gestorAcciones.selectObject(event);
+					break;
+			}
+		//No me detecta el click derecho
+		}else if(botonPulsado == 3){
+
+			switch (this.applicationMode) {
+				
+				case MyScene.NO_ACTION:
+					this.gestorAcciones.prepareContextMenu(event);
+					break;
+			}
+
 		}
 	}
 
@@ -217,8 +232,9 @@ class MyScene extends THREE.Scene {
 		return this.applicationMode;
 	}
 
-	prepareGestorAcciones(mesh) {
-		this.gestorAcciones.prepareADD(mesh);
+	prepareGestorAcciones(elemento) {
+
+		this.gestorAcciones.prepareADD(elemento);
 	}
 
 	update() {
@@ -274,7 +290,8 @@ $(function() {
 	/**
    * LISTENERS DE RATÓN
    */
-	window.addEventListener('click', (event) => scene.onMouseClick(event), true);
+	//CAMBIAR A CLICK SI MOLESTA EL MOUSEDOWN
+	window.addEventListener('mousedown', (event) => scene.onMouseClick(event), true);
 	window.addEventListener('mousemove', (event) => scene.onMouseMove(event), true);
 
 	/**
@@ -293,10 +310,8 @@ $(function() {
 
 	$('.elementos-escena button').click(function() {
 		var elemento = $(this).val();
-		var gestor = new GestorModelos(elemento);
-		var object3D = gestor.getObject3D();
 
-		scene.prepareGestorAcciones(object3D);
+		scene.prepareGestorAcciones(elemento);
 		scene.setApplicationMode(MyScene.ADDING_OBJECT);
 	});
 

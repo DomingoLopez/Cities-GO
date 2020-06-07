@@ -44,6 +44,15 @@ class Rascacielos extends THREE.Object3D {
 			this.meshArray[i].userData = this;
 			this.add(this.meshArray[i]);
 		}
+
+		var acera = new Acera();
+		var base = acera.getMeshBase();
+		base.userData = this;
+		this.meshArray.push(base);
+		this.add(base);
+
+
+
 	}
 
 	getMeshBase() {

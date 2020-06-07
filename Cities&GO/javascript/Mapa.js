@@ -41,7 +41,7 @@ class Mapa extends THREE.Object3D {
 
 			var options = {
 				wireframe : false,
-				color : 0xedc799
+				color : 0xadc986
 			};
 
 		for (var i = 0; i < ancho / tam_celda; i++) {
@@ -139,7 +139,7 @@ class Mapa extends THREE.Object3D {
 			flatShading : false,
 			wireframe : false,
 			side : THREE.DoubleSide,
-			color: 0xa07652
+			color: 0xa6dd95
 		});
 		//Se combierte en un mesh
 		var resultadoMesh = resultado.toMesh(mat);

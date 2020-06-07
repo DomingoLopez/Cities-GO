@@ -18,10 +18,12 @@ class GestorTeclado{
 		var ySpeed = 1;
         var rotationSpeed = 0.025;
         
-        var keyCode = event.which;
+		var keyCode = event.which;
+		//console.log(keyCode);
+
 
 		switch (keyCode) {
-			//w
+			/*//w
 			case 87:
 				this.camera.position.z -= ySpeed;
 				break;
@@ -60,14 +62,45 @@ class GestorTeclado{
 			//Espacio
 			case 32:
 				this.camera.position.set(0, 30, 70);
-                break;
+                break;*/
             
             //SUPRIMIR
             case 46:
 
-                this.gestorAcciones.deleteORcancel();
+                this.gestorAcciones.deleteOBJ();
 
-                break;
+			break;
+
+			//ESC
+			case 27:
+				this.gestorAcciones.cancelAction();
+			break;
+				
+				//Z, Pero se lanza cundo está el Ctrl pulsado tb
+			case 90:
+				
+				if(event.ctrlKey){
+					//Si tenemos pulsado la tecla Ctrl + Z, debemos revertir la acción anterior
+					this.gestorAcciones.unDoAction();
+				}
+
+			break;
+
+			case 88:
+				
+				if(event.ctrlKey){
+					//Si tenemos pulsado la tecla Ctrl + Z, debemos revertir la acción anterior
+					this.gestorAcciones.reDoAction();
+				}
+
+			break;
+
+			//R
+			case 82:
+
+				this.gestorAcciones.rotateOBJ();
+
+			break;
 
 		}
 	}

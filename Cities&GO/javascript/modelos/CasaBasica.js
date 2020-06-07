@@ -87,6 +87,7 @@ class CasaBasica extends THREE.Object3D {
 		];*/
 
 		var cesped = new Cesped();
+<<<<<<< HEAD
 		var casa = new Casa();
 		this.add(cesped);
 		this.add(casa);
@@ -94,6 +95,16 @@ class CasaBasica extends THREE.Object3D {
 		this.meshArray = [];
 		this.meshArray.push(cesped);
 		this.meshArray.push(casa);
+=======
+		var base = cesped.getMeshBase();
+		base.userData = this;
+		this.add(base);
+
+		this.meshArray = [];
+		this.meshArray.push(base);
+		this.meshArray.push(cone);
+		this.meshArray.push(caja);
+>>>>>>> 3fbd060b5873a225bb324176b8bcbe8f58aaaa60
 	}
 
 	getMeshArray() {

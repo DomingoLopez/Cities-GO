@@ -3,29 +3,34 @@ class AceraFarola extends THREE.Object3D {
 		super();
 
 		this.acera = new Acera();
-		this.add(this.acera);
+		var ac = this.acera.getMeshBase();
 
 		this.farola = new Farola();
 		//this.farola.position.y = 1;
 		this.farola.position.z = -1;
 		this.farola.scale.set(0.8, 0.8, 0.8);
 
-		this.add(this.farola);
+		var childFarola = this.farola.getMeshArray();
+
+		this.add(childFarola[0]); childFarola[0].userData = this;
+		this.add(childFarola[1]); childFarola[1].userData = this;
+		this.add(ac); ac.userData = this;
 
 		this.meshArray = [];
-		this.meshArray.push(this.acera);
-		this.meshArray.push(this.farola);
+		this.meshArray.push(ac);
+		this.meshArray.push(childFarola[0]);
+		this.meshArray.push(childFarola[1]);
 
 		var light = new THREE.SpotLight(0xeffe00, 4, 7);
 		light.position.set(0, 3.2, 0.6);
-		light.target = this.acera;
+		light.target = ac;
 		light.penumbra = 0.1;
 		light.decay = 2;
 		this.add(light);
 	}
 
 	getMeshArray() {
-		var mesh = [];
+		/*var mesh = [];
 		for (var i = 0; i < this.meshArray.length; i++) {
 			var cadaMesh = this.meshArray[i].getMeshArray();
 			for (var j = 0; j < cadaMesh.length; j++) {
@@ -34,8 +39,10 @@ class AceraFarola extends THREE.Object3D {
 				mesh.push(nuevo_mesh);
 			}
 		}
-		console.log(mesh);
-		return mesh;
+		return mesh;*/
+
+
+		return this.meshArray;
 	}
 
 	update() {
