@@ -53,9 +53,6 @@ class MyScene extends THREE.Scene {
 		this.camara.lookAt(new THREE.Vector3(0, 0, 0));
 		var look = new THREE.Vector3(0, 0, 0);
 		this.add(this.camara);
-		/**
-		 * AÑADIDO PARA LA CÁMARA. QUITAR SI NO
-		 */
 
 		// Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
 		this.cameraControl = new THREE.OrbitControls(this.camara.getCamera(), this.renderer.domElement);
@@ -63,23 +60,18 @@ class MyScene extends THREE.Scene {
 		this.cameraControl.minPolarAngle = 0;
 		this.cameraControl.maxPolarAngle = Math.PI / 2.1; //El .1 es para que no toque el suelo del todo
 		this.cameraControl.maxDistance = 500;
+		this.cameraControl.saveState();
 		this.cameraControl.update();
 
-		// Se configuran las velocidades de los movimientos
-		/*this.cameraControl.rotateSpeed = 2;
-		this.cameraControl.zoomSpeed = 2;
-		this.cameraControl.panSpeed = 0.3;
-		// Debe orbitar con respecto al punto de mira de la cámara*/
-		//this.cameraControl.target = look;
 	}
 
 	createGUI() {
 		// Se crea la interfaz gráfica de usuario
 		var gui = new dat.GUI();
-
 		// La escena le va a añadir sus propios controles.
 		// Se definen mediante una   new function()
 		// En este caso la intensidad de la luz y si se muestran o no los ejes
+		var that = this;
 		this.guiControls = new function() {
 			// En el contexto de una función   this   alude a la función
 			this.lightIntensity = 0.5;
@@ -87,10 +79,17 @@ class MyScene extends THREE.Scene {
 			this.spotlightOnOff = false;
 			this.luzHemisferioOnOff = true; //....
 			this.axisOnOff = true;
+
+			this.cameraReset = function(){
+				that.cameraControl.reset();
+			}
+
+
 		}();
 
 		// Se crea una sección para los controles de esta clase
 		var folder = gui.addFolder('Luz y Ejes');
+		var folder2 = gui.addFolder('Camara');
 
 		// Se le añade un control para la intensidad de la luz
 		folder.add(this.guiControls, 'ambientIntensity', 0, 0.8, 0.1).name('Ambient int.: ');
@@ -101,6 +100,12 @@ class MyScene extends THREE.Scene {
 
 		// Y otro para mostrar u ocultar los ejes
 		folder.add(this.guiControls, 'axisOnOff').name('Mostrar ejes : ');
+
+
+		//Folder para el reset de la cámara
+		folder2.add(this.guiControls, 'cameraReset').name('[Reset posicion]');
+
+
 		return gui;
 	}
 
