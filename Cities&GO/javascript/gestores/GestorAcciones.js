@@ -355,7 +355,7 @@ class GestorAcciones {
 			//No hace falta que lo borremos porque ya lo borramos al picarlo
 			//this.mapa.deleteFromObjectsArray(this.objetoAColocar);
 			this.celdaActual.material.color = new THREE.Color(0xadc986);
-
+			this.helper.setColorCorrecto();
 			this.destroyHelper();
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
