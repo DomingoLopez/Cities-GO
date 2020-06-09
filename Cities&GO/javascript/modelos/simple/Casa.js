@@ -6,7 +6,10 @@ class Casa extends ObjetoSimple {
 		shape.lineTo(1.8, 0);
 		shape.lineTo(0, 1);
 		shape.lineTo(-1.8, 0);
-		var material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+		var color = new Colores();
+
+		var material = new THREE.MeshPhongMaterial({ color: color.getRandomCasa() });
 		var extrudeSettings = {
 			steps: 1,
 			depth: 4,

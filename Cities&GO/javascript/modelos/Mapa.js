@@ -8,10 +8,8 @@ class Mapa extends THREE.Object3D {
 		this.largo = largo;
 		this.tam_celda = 5;
 
-
-
 		//Añadimos la interfaz dat gui para el control del mapa
-		this.createGUI(gui, "Control del mapa");
+		this.createGUI(gui, 'Control del mapa');
 
 		//Array de celdas del mapa
 		this.celdas = this.createFieldBox(this.ancho, this.largo, this.tam_celda);
@@ -19,16 +17,13 @@ class Mapa extends THREE.Object3D {
 		this.objetos = [];
 
 		//Creamos el terreno restante hasta casi el final del Skybox
-		this.terreno = this.createGround(ancho,largo);
+		this.terreno = this.createGround(ancho, largo);
 		this.add(this.terreno);
 
 		//Creamos las guías, por si el usuario quiere verlas
 		this.guias = new THREE.Object3D();
 		this.guidesArray = this.createGuides(this.ancho, this.largo, this.tam_celda);
 		this.add(this.guias);
-
-
-		
 	}
 
 	/**
@@ -39,10 +34,10 @@ class Mapa extends THREE.Object3D {
 		var movZ = 0;
 		var movX = 0;
 
-			var options = {
-				wireframe : false,
-				color : 0xadc986
-			};
+		var options = {
+			wireframe: false,
+			color: 0xadc986
+		};
 
 		for (var i = 0; i < ancho / tam_celda; i++) {
 			movZ = largo / 2 - i * tam_celda - tam_celda / 2;
@@ -69,26 +64,21 @@ class Mapa extends THREE.Object3D {
 		return matrix;
 	}
 
-
-
-
-
 	/**
 	 * Creamos las guías, por si el usuario las quiere visualizar
 	 */
 
 	createGuides(ancho, largo, tam_celda) {
-
 		var matrix = [];
 		var movZ = 0;
 		var movX = 0;
 
-			var options = {
-				wireframe : true,
-				color : 0x418ea0,
-				transparent : true,
-				opacity : 0.5
-			};
+		var options = {
+			wireframe: true,
+			color: 0x418ea0,
+			transparent: true,
+			opacity: 0.5
+		};
 
 		for (var i = 0; i < ancho / tam_celda; i++) {
 			movZ = largo / 2 - i * tam_celda - tam_celda / 2;
@@ -110,7 +100,6 @@ class Mapa extends THREE.Object3D {
 		}
 
 		return matrix;
-
 	}
 
 	/**
@@ -118,14 +107,11 @@ class Mapa extends THREE.Object3D {
 	 * Skybox
 	 */
 
-	createGround(ancho, largo){
+	createGround(ancho, largo) {
 		//Hemos de usar nodosBSP.
 
-		
-		var geom1 = new THREE.BoxGeometry(2000,0.1,2000);
-		var geom2 = new THREE.BoxGeometry(ancho,0.1,largo);
-
-	
+		var geom1 = new THREE.BoxGeometry(2000, 0.1, 2000);
+		var geom2 = new THREE.BoxGeometry(ancho, 0.1, largo);
 
 		//Se colocan donde deben estar
 
@@ -136,9 +122,9 @@ class Mapa extends THREE.Object3D {
 		//Se realizan las operaciones
 		var resultado = nodoBSP1.subtract(nodoBSP2);
 		var mat = new THREE.MeshPhongMaterial({
-			flatShading : false,
-			wireframe : false,
-			side : THREE.DoubleSide,
+			flatShading: false,
+			wireframe: false,
+			side: THREE.DoubleSide,
 			color: 0xa6dd95
 		});
 		//Se combierte en un mesh
@@ -152,31 +138,17 @@ class Mapa extends THREE.Object3D {
 		resultadoMesh.geometry.computeVertexNormals();
 
 		return resultadoMesh;
-
-
 	}
 
-
-	createGUI(gui, titulo){
-
-		this.guiControls = new function () {
-
+	createGUI(gui, titulo) {
+		this.guiControls = new function() {
 			this.guidesOnOff = false;
-	  
-		}; 
-			
-			// Se crea una sección para los controles de la caja
-			var folder = gui.addFolder (titulo);
-			folder.add(this.guiControls, 'guidesOnOff').name('Guias Construcción : ');	
-			
+		}();
 
-
+		// Se crea una sección para los controles de la caja
+		var folder = gui.addFolder(titulo);
+		folder.add(this.guiControls, 'guidesOnOff').name('Guias Construcción : ');
 	}
-
-
-
-
-
 
 	/**
 	 * Devuelve el array de objetos que están sobre el mapa
@@ -201,9 +173,8 @@ class Mapa extends THREE.Object3D {
 		//Hay que borrar todos los meshes del array de objetos
 		var children = object3D.getMeshArray();
 
-
 		//A ver si podemos mejorar éste doble for....
-		for(var i = 0; i< children.length; i++){
+		for (var i = 0; i < children.length; i++) {
 			var terminado = false;
 			for (var j = 0; j < this.objetos.length && !terminado; j++) {
 				if (children[i] == this.objetos[j]) {
@@ -211,12 +182,9 @@ class Mapa extends THREE.Object3D {
 					delete this.objetos[j];
 				}
 			}
+		}
 
-
-		}	
-
-		//AL HACER DELETE, QUEDAN HUECOS CON UNDEFINED EN EL ARRAY.
-		//SE BORRAN ASÍ
+		//Al hacer delete quedan huecos con undefined, asi los eliminamos
 		var aux = this.objetos.filter(function(limpios) {
 			return limpios != undefined;
 		});
@@ -231,30 +199,7 @@ class Mapa extends THREE.Object3D {
 		return this.celdas;
 	}
 
-	/*
-	getEstadoCelda(meshCelda) {
-		if (meshCelda != null) {
-			var campos = meshCelda.name.split('-');
-
-
-			return campos[3] == 'free' ? true : false;
-		} else {
-			return null;
-		}
-	}
-
-	setEstadoCelda(meshCelda, estado) {
-		var campos = meshCelda.name.split('-');
-		campos[3] = estado;
-		var nombre = campos.join('-');
-
-		meshCelda.name = nombre;
-	}
-
-*/
-
 	update() {
-		
 		this.guias.visible = this.guiControls.guidesOnOff;
 	}
 }

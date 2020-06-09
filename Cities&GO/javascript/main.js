@@ -1,16 +1,9 @@
-$(document).ready(function(){
+$(document).ready(function() {
+	$('.ayuda').click(function() {
+		$('#div-ayuda').show();
+	});
 
-
-
-    $(".ayuda").click(function(){
-        $("#div-ayuda").show();
-    });
-
-    $(".cerrar-ayuda").click(function(){
-        $("#div-ayuda").hide();
-    });
-
-
-
-
+	$('.cerrar-ayuda').click(function() {
+		$('#div-ayuda').hide();
+	});
 });

@@ -1,7 +1,19 @@
 class Colores {
-	constructor() {
-		this.colores_casa = [ 0xfebcc8, 0xffffd8, 0xc0fefe, 0x836853 ];
-		this.colores_rascacielos = [ 0x18436d, 0x202c39, 0x6b5a45 ];
+	//Esta clase contiene colores para asignar a los modelos, para que sea
+	//mas localizable y rapido de cambiar en caso de querer realizar un cambio
+	//de paleta por ejemplo
+	constructor() {}
+
+	getColorCorrecto() {
+		return 0x58ce21;
+	}
+
+	getColorError() {
+		return 0xce2121;
+	}
+
+	getColorSeleccion() {
+		return 0x2194ce;
 	}
 
 	getColorCesped() {
@@ -25,13 +37,15 @@ class Colores {
 	}
 
 	getRandomCasa() {
-		var random = Math.floor(Math.random() * this.colores_casa.length);
-		return this.colores_casa[random];
+		var colores_casa = [ 0xfebcc8, 0xffffd8, 0xc0fefe, 0x836853, 0xff4b43 ];
+		var random = Math.floor(Math.random() * colores_casa.length);
+		return colores_casa[random];
 	}
 
 	getRandomRasca() {
-		var random = Math.floor(Math.random() * this.colores_rascacielos.length);
-		return this.colores_rascacielos[random];
+		var colores_rascacielos = [ 0x18436d, 0x202c39, 0x6b5a45 ];
+		var random = Math.floor(Math.random() * colores_rascacielos.length);
+		return colores_rascacielos[random];
 	}
 
 	getColorObjeto(objeto) {

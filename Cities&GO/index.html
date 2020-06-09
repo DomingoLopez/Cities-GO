@@ -28,10 +28,10 @@
     <script type="text/javascript" src="./javascript/main.js"></script>
 
     <!--Helpers--> 
-    <script type="text/javascript" src="./javascript/AssignHelper.js"></script> 
-    <script type="text/javascript" src="./javascript/Colores.js"></script> 
+    <script type="text/javascript" src="./javascript/helpers/AssignHelper.js"></script> 
+    <script type="text/javascript" src="./javascript/helpers/Colores.js"></script> 
 
-    <!--Modelos-->
+    <!--Modelos simples (object3D con uno o mas mesh)-->
     <script type="text/javascript" src="./javascript/modelos/simple/ObjetoSimple.js"></script>
     <script type="text/javascript" src="./javascript/modelos/simple/Arena.js"></script>
     <script type="text/javascript" src="./javascript/modelos/simple/Acera.js"></script>
@@ -46,7 +46,7 @@
     <script type="text/javascript" src="./javascript/modelos/simple/Casa.js"></script> 
     <script type="text/javascript" src="./javascript/modelos/simple/Edificio.js"></script> 
    
-
+    <!--Modelos complejos (object3d con mas de un object3D)-->
     <script type="text/javascript" src="./javascript/modelos/complejo/ObjetoComplejo.js"></script>
     <script type="text/javascript" src="./javascript/modelos/complejo/AceraFarola.js"></script>
     <script type="text/javascript" src="./javascript/modelos/complejo/Pinos.js"></script>
@@ -54,34 +54,32 @@
     <script type="text/javascript" src="./javascript/modelos/complejo/CasaBasica.js"></script> 
     <script type="text/javascript" src="./javascript/modelos/complejo/Rascacielos.js"></script> 
    
-  
-    <!--Resto-->
-    <script type="text/javascript" src="./javascript/Action.js"></script> 
-    <script type="text/javascript" src="./javascript/ActionStack.js"></script> 
-    <script type="text/javascript" src="./javascript/GestorModelos.js"></script> 
+    <!--Modelo del tablero-->
+    <script type="text/javascript" src="./javascript/modelos/Mapa.js"></script> 
+    
+    <!--Gestores-->
+    <script type="text/javascript" src="./javascript/gestores/GestorModelos.js"></script> 
+    <script type="text/javascript" src="./javascript/gestores/GestorAcciones.js"></script>
+    <script type="text/javascript" src="./javascript/gestores/GestorRaton.js"></script>
+    <script type="text/javascript" src="./javascript/gestores/GestorTeclado.js"></script>
+    
+    <!--Control de acciones-->
+    <script type="text/javascript" src="./javascript/controlAcciones/Action.js"></script> 
+    <script type="text/javascript" src="./javascript/controlAcciones/ActionStack.js"></script> 
+   
+    <!--Camara-->
     <script type="text/javascript" src="./javascript/Camara.js"></script>
+
+    <!--Control del tiempo/luz-->
     <script type="text/javascript" src="./javascript/sistemaDiaNoche/SkyBox.js"></script>
     <script type="text/javascript" src="./javascript/sistemaDiaNoche/Sol.js"></script>
-    <script type="text/javascript" src="./javascript/GestorTeclado.js"></script>
-    <script type="text/javascript" src="./javascript/GestorAcciones.js"></script>
-    <script type="text/javascript" src="./javascript/Mapa.js"></script> 
+    
+    <!--Escena-->
     <script type="text/javascript" src="./javascript/MyScene.js"></script>
 
     
 </head>
-<body>
-    <!--nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-
-        <a class="navbar-brand" href="#">Cities<span style="color:rgb(241, 255, 118)">&</span><span style="color:rgb(137, 255, 126)">GO!</span></a>
-
-        <ul class="navbar-nav ">
-          <li class="nav-item ">
-            <a class="nav-link boton-login-registro" href="javascript:void(0)">Nueva construcción</a>
-          </li>
-        </ul>
-    </nav.-->
-
-    
+<body>    
     <!-- Div which will hold the Output -->
     <div id="WebGL-output" class="float-left">
 

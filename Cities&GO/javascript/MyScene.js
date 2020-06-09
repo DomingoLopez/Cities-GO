@@ -15,7 +15,6 @@ class MyScene extends THREE.Scene {
 		//Luces
 		this.createLights();
 		//Camara
-		//this.createCamera();
 		this.camara = new Camara(this.renderer);
 		this.add(this.camara);
 
@@ -27,8 +26,6 @@ class MyScene extends THREE.Scene {
 		this.applicationMode = MyScene.NO_ACTION;
 
 		//Creamos el mapa, pasándole la escena, el ancho y el largo.
-		//Si da tiempo hacemos un formulario donde podamos introducir el ancho y largo deseado
-
 		this.mapa = new Mapa(this, 150, 150, this.gui); //Ancho, largo, y tam de cada cuadrado
 		this.add(this.mapa);
 
@@ -45,9 +42,11 @@ class MyScene extends THREE.Scene {
 		this.gestorAcciones = new GestorAcciones(this, this.mapa);
 
 		//Gestor para detección y acciones de las teclas
-		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
-	}
+		this.gestorTeclado = new GestorTeclado(this.gestorAcciones);
 
+		//Gestor para deteccion de movimiento y click del raton
+		this.gestorRaton = new GestorRaton(this, this.gestorAcciones);
+	}
 
 	createGUI() {
 		// Se crea la interfaz gráfica de usuario
@@ -64,11 +63,9 @@ class MyScene extends THREE.Scene {
 			this.luzHemisferioOnOff = true; //....
 			this.axisOnOff = true;
 
-			this.cameraReset = function(){
+			this.cameraReset = function() {
 				that.camara.resetPosicion();
-			}
-
-
+			};
 		}();
 
 		// Se crea una sección para los controles de esta clase
@@ -85,10 +82,8 @@ class MyScene extends THREE.Scene {
 		// Y otro para mostrar u ocultar los ejes
 		folder.add(this.guiControls, 'axisOnOff').name('Mostrar ejes : ');
 
-
 		//Folder para el reset de la cámara
 		folder2.add(this.guiControls, 'cameraReset').name('[Reset posicion]');
-
 
 		return gui;
 	}
@@ -165,45 +160,6 @@ class MyScene extends THREE.Scene {
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
 	}
 
-	onMouseClick(event) {
-		var botonPulsado = event.which;
-		
-		if(botonPulsado == 1){
-
-			switch (this.applicationMode) {
-				case MyScene.ADDING_OBJECT:
-					this.gestorAcciones.addObject(event);
-					break;
-
-				case MyScene.SELECTED_OBJECT:
-					this.gestorAcciones.addObject(event);
-					break;
-
-				case MyScene.NO_ACTION:
-					this.gestorAcciones.selectObject(event);
-					break;
-			}
-
-		}
-	}
-
-	onMouseMove(event) {
-		switch (this.applicationMode) {
-			case MyScene.ADDING_OBJECT:
-				this.gestorAcciones.choosingZone(event);
-				break;
-
-			case MyScene.SELECTED_OBJECT:
-				this.gestorAcciones.choosingZone(event);
-				break;
-
-			case MyScene.NO_ACTION:
-				this.gestorAcciones.reloadHelper();
-				this.gestorAcciones.choosingObject(event);
-				break;
-		}
-	}
-
 	setApplicationMode(estado) {
 		this.applicationMode = estado;
 	}
@@ -213,7 +169,6 @@ class MyScene extends THREE.Scene {
 	}
 
 	prepareGestorAcciones(elemento) {
-
 		this.gestorAcciones.prepareADD(elemento);
 	}
 
@@ -268,15 +223,13 @@ $(function() {
 	/**
    * LISTENERS DE RATÓN
    */
-	//CAMBIAR A CLICK SI MOLESTA EL MOUSEDOWN
-	window.addEventListener('mousedown', (event) => scene.onMouseClick(event), true);
-	window.addEventListener('mousemove', (event) => scene.onMouseMove(event), true);
+	window.addEventListener('mousedown', (event) => scene.gestorRaton.onMouseClick(event), true);
+	window.addEventListener('mousemove', (event) => scene.gestorRaton.onMouseMove(event), true);
 
 	/**
    * LISTENERS DE TECLADO
    */
 
-	//Listener para el teclado
 	window.addEventListener('keydown', (event) => scene.gestorTeclado.onKeyDown(event), false);
 
 	/**

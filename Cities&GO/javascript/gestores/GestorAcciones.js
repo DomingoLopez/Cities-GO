@@ -5,7 +5,7 @@ class GestorAcciones {
 
 		// RayCaster para selección del suelo
 		this.raycaster = new THREE.Raycaster();
-		
+
 		//Variables para colocar objetcos
 		this.objetoAColocar = null;
 		//Variable para permitir colocar un objeto
@@ -22,7 +22,6 @@ class GestorAcciones {
 		//Elemento actual para seguir añadiendo
 		this.elementoActual = null;
 
-
 		/*El gestor de acciones lleva la traza de acciones mediante una clase ActionStack,
 		Una pila que almacena las acciones que se han realizado para poder revertirlas al pulsar
 		Ctrl + Z por ejemplo.
@@ -31,8 +30,6 @@ class GestorAcciones {
 
 		//Coordenadas de la posición anterior del objeto. Por si se revierte la acción
 		this.lastestObjectCoords = null;
-
-
 	}
 
 	/**
@@ -61,7 +58,6 @@ class GestorAcciones {
      * Como su nombre indica, prepara el escenario para la posible inserción de un elemento
      */
 	prepareADD(elemento) {
-
 		this.elementoActual = elemento;
 
 		/**
@@ -70,9 +66,9 @@ class GestorAcciones {
 		 * lo que provocaría fallos. (No se elimina el objeto anterior en la escena, etc)
 		 * Por eso, hemos de hacer ésta comprobación
 		 */
-		if(this.objectOnScene){
+		if (this.objectOnScene) {
 			this.mapa.remove(this.objetoAColocar);
-			this.objetoAColocar =  null;
+			this.objetoAColocar = null;
 			this.helperOnScene = false;
 			this.mapa.remove(this.helper);
 			this.celdaActual.material.color = new THREE.Color(0xadc986);
@@ -83,9 +79,7 @@ class GestorAcciones {
 		var object3D = gestor.getObject3D();
 
 		this.objetoAColocar = object3D;
-
 	}
-
 
 	/**
      * Como su nombre indica, prepara el escenario para un posible desplazamiento de objetos
@@ -95,8 +89,8 @@ class GestorAcciones {
 		this.objectOnScene = true;
 
 		var lastPosition = {
-			posX : this.objetoAColocar.position.x,
-			posZ : this.objetoAColocar.position.z
+			posX: this.objetoAColocar.position.x,
+			posZ: this.objetoAColocar.position.z
 		};
 
 		this.lastestObjectCoords = lastPosition;
@@ -171,21 +165,19 @@ class GestorAcciones {
 			this.helper.position.x = celdaEnHover.object.position.x;
 			this.helper.position.z = celdaEnHover.object.position.z;
 
-			if(!this.helperOnScene){
+			if (!this.helperOnScene) {
 				this.mapa.add(this.helper);
 				this.helperOnScene = true;
 			}
 
-			if(!this.objectOnScene){
+			if (!this.objectOnScene) {
 				this.mapa.add(this.objetoAColocar);
 				this.objectOnScene = true;
 			}
 
 			if (this.celdaActual == null) {
-
 				var celdaAnterior = celdaEnHover.object;
 				this.celdaActual = celdaAnterior;
-
 			} else if (celdaEnHover.object != this.celdaActual) {
 				//this.celdaActual.material.wireframe = true;
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
@@ -287,81 +279,66 @@ class GestorAcciones {
 		var celdaPickada = this.getPointOnGround(event);
 
 		if (celdaPickada != null && this.objetoAColocarPermitido) {
-
 			var array = this.objetoAColocar.getMeshArray();
 			for (var i = 0; i < array.length; i++) {
 				this.mapa.insertObject(array[i]);
 			}
 			//this.mapa.add(this.objetoAColocar);
-			celdaPickada.object.material.color = new THREE.Color(0xadc986);
-			
+			celdaPickada.object.material.color = new THREE.Color(0xadc986); //Debemos comprobar si estamos insertando ó moviendo
 
 			/*Una vez añadido el objeto a la escena, debemos introducir la acción
 			en la pila del sistema para poder revertirla
-			*/ //Debemos comprobar si estamos insertando ó moviendo
-			if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT){
-
+			*/ if (
+				this.scene.getApplicationMode() == MyScene.ADDING_OBJECT
+			) {
 				var action = new Action(Action.INSERTAR, this.objetoAColocar);
 				this.actions.pushAction(action);
 				this.objectOnScene = false;
 				this.prepareADD(this.elementoActual);
 
 				//Ésto evitará dobles picados sin querer
-				this.objetoAColocarPermitido = false
+				this.objetoAColocarPermitido = false;
 				this.helper.setColorError();
-
-
-			}else if(this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT){
-
+			} else if (this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT) {
 				var actualCoords = {
-					posX : this.objetoAColocar.position.x,
-					posZ : this.objetoAColocar.position.z
+					posX: this.objetoAColocar.position.x,
+					posZ: this.objetoAColocar.position.z
 				};
 
 				this.objectOnScene = false;
 				this.objetoAColocarPermitido = false;
 
-
-				var action = new Action(Action.MOVER, { obj : this.objetoAColocar , lastestCoords : this.lastestObjectCoords, actualCoords: actualCoords});
+				var action = new Action(Action.MOVER, {
+					obj: this.objetoAColocar,
+					lastestCoords: this.lastestObjectCoords,
+					actualCoords: actualCoords
+				});
 				this.actions.pushAction(action);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
-
 			}
 
 			//this.destroyHelper();
-
-			
-
 		}
 	}
-
 
 	/**
 	 * Método que rota 90º el objeto si estamos en modo adición o selección
 	 */
-	rotateOBJ(){
-
+	rotateOBJ() {
 		if (
 			this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT ||
 			this.scene.getApplicationMode() == MyScene.ADDING_OBJECT
-		){
-
-			this.objetoAColocar.rotation.y += Math.PI/2;
-
+		) {
+			this.objetoAColocar.rotation.y += Math.PI / 2;
 		}
-
-
-
 	}
-
 
 	/**
      * Método que se llama tras recibir una instrucción de suprimir desde el teclado
      * Si hay un objeto seleccionado
      */
 	deleteOBJ() {
-		if (
-			this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT) {
+		if (this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT) {
 			//Si hemos seleccionado un objeto, debe estar en this.objetoAColocar
 			//Y además, no está en el array de objetos del mapa, dado que vamos a volver a colocarlo
 			//Simplemente podemos quitar de la escena el objeto a colocar, ponerlo a null y destruir el helper
@@ -376,24 +353,17 @@ class GestorAcciones {
 			//this.mapa.deleteFromObjectsArray(this.objetoAColocar);
 			this.celdaActual.material.color = new THREE.Color(0xadc986);
 
-
 			this.destroyHelper();
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
 		}
-
-		
 	}
-
 
 	/**
 	 * Método que cancela la acción de añadido a la escena
 	 */
-	cancelAction(){
-
-		switch(this.scene.getApplicationMode()){
-
+	cancelAction() {
+		switch (this.scene.getApplicationMode()) {
 			case MyScene.ADDING_OBJECT:
-
 				this.mapa.remove(this.objetoAColocar);
 				//Evitamos que salga de color rojo
 				this.helper.setColorCorrecto();
@@ -401,10 +371,9 @@ class GestorAcciones {
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
 
-			break;
+				break;
 
 			case MyScene.SELECTED_OBJECT:
-
 				this.objetoAColocar.position.x = this.lastestObjectCoords.posX;
 				this.objetoAColocar.position.z = this.lastestObjectCoords.posZ;
 
@@ -416,34 +385,24 @@ class GestorAcciones {
 				this.objectOnScene = false;
 				//this.helperOnScene = false;
 
-
 				//Evitamos que salga de color rojo
 				this.helper.setColorCorrecto();
 				this.destroyHelper();
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
 
-			break;
-
-		};
-
-
-
-		
-
-
+				break;
+		}
 	}
 
 	/**
 	  * Método que se ejecuta cuando se pulsa Ctrl + Z, y que saca de la pila la última acción realizada
 	  * para revertirla
 	  */
-	 unDoAction(){
+	unDoAction() {
 		//De momento sólo lo vamos a permitir cuando no se estén realizando acciones
-		if(this.scene.getApplicationMode() == MyScene.NO_ACTION){
-
-			if(!this.actions.empty()){
-
+		if (this.scene.getApplicationMode() == MyScene.NO_ACTION) {
+			if (!this.actions.empty()) {
 				var accion = this.actions.popAction();
 				var tipo = accion.getType();
 				var options = accion.getOptions();
@@ -451,18 +410,15 @@ class GestorAcciones {
 				//Una vez sacad la acción, la metemos en la pila del rehacer
 				this.actions.pushActionInverse(accion);
 
-
-
-				switch(tipo){
-
-					case Action.INSERTAR : 
+				switch (tipo) {
+					case Action.INSERTAR:
 						//En options tenemos object3D. Solo tenemos que eliminarlo de la escena y borrarlo del mapa
 						this.mapa.remove(options);
 						this.mapa.deleteFromObjectsArray(options);
 
-					break;
+						break;
 
-					case Action.MOVER : 
+					case Action.MOVER:
 						var posX = options.lastestCoords.posX;
 						var posZ = options.lastestCoords.posZ;
 
@@ -470,29 +426,17 @@ class GestorAcciones {
 						obj.position.x = posX;
 						obj.position.z = posZ;
 
-					break;
-
-				};
-
-
+						break;
+				}
 			}
-
-
-		}else if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT){
-
+		} else if (this.scene.getApplicationMode() == MyScene.ADDING_OBJECT) {
 			this.cancelAction();
-
 		}
-
 	}
 
-
-	reDoAction(){
-
-		if(this.scene.getApplicationMode() == MyScene.NO_ACTION){
-
-			if(!this.actions.emptyInverse()){
-
+	reDoAction() {
+		if (this.scene.getApplicationMode() == MyScene.NO_ACTION) {
+			if (!this.actions.emptyInverse()) {
 				var accion = this.actions.popActionInverse();
 				var tipo = accion.getType();
 				var options = accion.getOptions();
@@ -500,22 +444,20 @@ class GestorAcciones {
 				//Una vez sacad la acción, la metemos en la pila del rehacer
 				this.actions.pushAction(accion);
 
-
-
-				switch(tipo){
+				switch (tipo) {
 					//Si la acción desecha era insertar, ahora hay que insertarlo
-					case Action.INSERTAR : 
+					case Action.INSERTAR:
 						//En options tenemos object3D. Solo tenemos que eliminarlo de la escena y borrarlo del mapa
 						this.mapa.add(options);
 						var child = options.getMeshArray();
 
-						for(var i = 0; i<child.length; i++){
+						for (var i = 0; i < child.length; i++) {
 							this.mapa.insertObject(child[i]);
 						}
 
-					break;
+						break;
 					//Si la acción desecha era mover, ahora hay que moverlo a su posición correcta
-					case Action.MOVER : 
+					case Action.MOVER:
 						var posX = options.actualCoords.posX;
 						var posZ = options.actualCoords.posZ;
 
@@ -523,35 +465,11 @@ class GestorAcciones {
 						obj.position.x = posX;
 						obj.position.z = posZ;
 
-					break;
-
-				};
-
-
-
-
+						break;
+				}
 			}
-
-		}else if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT){
-
+		} else if (this.scene.getApplicationMode() == MyScene.ADDING_OBJECT) {
 			this.cancelAction();
-
 		}
-
-
-
-
-
-
-
-
-
-
 	}
-
-
-
-
-
-
 }
