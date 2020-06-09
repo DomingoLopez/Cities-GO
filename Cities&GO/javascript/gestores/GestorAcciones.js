@@ -97,6 +97,7 @@ class GestorAcciones {
 		//Añadimos el helper
 
 		this.setHelper(this.objetoAColocar);
+		this.helper.setColorSeleccion();
 		this.mapa.add(this.helper);
 		this.helperOnScene = true;
 	}
@@ -211,11 +212,11 @@ class GestorAcciones {
 				this.helper.setColorError();
 				this.objetoAColocarPermitido = false;
 			} else {
-				this.helper.setColorCorrecto();
+				this.helper.setColorSeleccion();
 				this.objetoAColocarPermitido = true;
 			}
 		} else {
-			this.helper.setColorCorrecto();
+			this.helper.setColorSeleccion();
 			this.objetoAColocarPermitido = true;
 		}
 	}
@@ -299,6 +300,7 @@ class GestorAcciones {
 				//Ésto evitará dobles picados sin querer
 				this.objetoAColocarPermitido = false;
 				this.helper.setColorError();
+
 			} else if (this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT) {
 				var actualCoords = {
 					posX: this.objetoAColocar.position.x,
@@ -314,10 +316,11 @@ class GestorAcciones {
 					actualCoords: actualCoords
 				});
 				this.actions.pushAction(action);
+				this.helper.setColorCorrecto();
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
 			}
 
-			//this.destroyHelper();
+			
 		}
 	}
 
