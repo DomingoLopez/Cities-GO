@@ -15,7 +15,9 @@ class MyScene extends THREE.Scene {
 		//Luces
 		this.createLights();
 		//Camara
-		this.createCamera();
+		//this.createCamera();
+		this.camara = new Camara(this.renderer);
+		this.add(this.camara);
 
 		//Ejes
 		this.axis = new THREE.AxesHelper(5);
@@ -46,24 +48,6 @@ class MyScene extends THREE.Scene {
 		this.gestorTeclado = new GestorTeclado(this.gestorAcciones, this.camara);
 	}
 
-	createCamera() {
-		// Creamos la camara, que se encuentra en un nodo del grafo
-		// y se controla por teclado
-		this.camara = new Camara();
-		this.camara.lookAt(new THREE.Vector3(0, 0, 0));
-		var look = new THREE.Vector3(0, 0, 0);
-		this.add(this.camara);
-
-		// Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
-		this.cameraControl = new THREE.OrbitControls(this.camara.getCamera(), this.renderer.domElement);
-		//Configuración de los controles de órbita
-		this.cameraControl.minPolarAngle = 0;
-		this.cameraControl.maxPolarAngle = Math.PI / 2.1; //El .1 es para que no toque el suelo del todo
-		this.cameraControl.maxDistance = 500;
-		this.cameraControl.saveState();
-		this.cameraControl.update();
-
-	}
 
 	createGUI() {
 		// Se crea la interfaz gráfica de usuario
@@ -81,7 +65,7 @@ class MyScene extends THREE.Scene {
 			this.axisOnOff = true;
 
 			this.cameraReset = function(){
-				that.cameraControl.reset();
+				that.camara.resetPosicion();
 			}
 
 
@@ -167,9 +151,9 @@ class MyScene extends THREE.Scene {
 	setCameraAspect(ratio) {
 		// Cada vez que el usuario modifica el tamaño de la ventana desde el gestor de ventanas de
 		// su sistema operativo hay que actualizar el ratio de aspecto de la cámara
-		this.getCamera().aspect = ratio;
+		this.camara.getCamera().aspect = ratio;
 		// Y si se cambia ese dato hay que actualizar la matriz de proyección de la cámara
-		this.getCamera().updateProjectionMatrix();
+		this.camara.getCamera().updateProjectionMatrix();
 	}
 
 	onWindowResize() {
@@ -250,10 +234,8 @@ class MyScene extends THREE.Scene {
 		// Se muestran o no los ejes según lo que idique la GUI
 		this.axis.visible = this.guiControls.axisOnOff;
 
-		/**
-		 * AÑADIDO PARA LA CÁMARA.QUITAR SI NO
-		 */
-		this.cameraControl.update();
+		//Actualizamos cada posición de la cámara
+		//this.camara.getCamera().update();
 
 		// Se actualiza el resto del modelo
 
@@ -262,7 +244,7 @@ class MyScene extends THREE.Scene {
 		this.sol.update();
 
 		// Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
-		this.renderer.render(this, this.getCamera());
+		this.renderer.render(this, this.camara.getCamera());
 	}
 }
 
