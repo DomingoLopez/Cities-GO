@@ -169,6 +169,8 @@ class MyScene extends THREE.Scene {
 	}
 
 	prepareGestorAcciones(elemento) {
+		//Reseteamos el colorActual para que no haya conflicos al cambiar de elemento
+		this.gestorAcciones.resetColorActual();
 		this.gestorAcciones.prepareADD(elemento);
 	}
 

@@ -9,7 +9,7 @@ class Casa extends ObjetoSimple {
 
 		var color = new Colores();
 
-		var material = new THREE.MeshPhongMaterial({ color: color.getRandomCasa() });
+		var material = new THREE.MeshPhongMaterial({ color: color.getColorCasa() });
 		var extrudeSettings = {
 			steps: 1,
 			depth: 4,
@@ -18,25 +18,30 @@ class Casa extends ObjetoSimple {
 
 		var geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
-		var tejado = new THREE.Mesh(geo, material);
-		tejado.position.z = -2;
-		tejado.position.y = 2;
+		this.tejado = new THREE.Mesh(geo, material);
+		this.tejado.position.z = -2;
+		this.tejado.position.y = 2;
 
-		this.add(tejado);
+		this.add(this.tejado);
 
 		material = new THREE.MeshPhongMaterial({ color: 0xeeeeee });
 		var caja = new THREE.Mesh(new THREE.BoxGeometry(3, 4, 3), material);
 		this.add(caja);
 
-		tejado.userData = this;
+		this.tejado.userData = this;
 		caja.userData = this;
 
-		tejado.castShadow = true;
-		tejado.receiveShadow = true;
+		this.tejado.castShadow = true;
+		this.tejado.receiveShadow = true;
 		caja.castShadow = true;
 		caja.receiveShadow = true;
 
-		this.meshArray.push(tejado);
+		this.meshArray.push(this.tejado);
 		this.meshArray.push(caja);
+	}
+
+
+	getTejado(){
+		return this.tejado;
 	}
 }

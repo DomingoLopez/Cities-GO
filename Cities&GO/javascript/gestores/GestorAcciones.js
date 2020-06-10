@@ -6,17 +6,17 @@ class GestorAcciones {
 		// RayCaster para selección del suelo
 		this.raycaster = new THREE.Raycaster();
 
-		//Variables para colocar objetcos
+		//Variables para colocar objetos
 		this.objetoAColocar = null;
 		//Variable para permitir colocar un objeto
 		this.objetoAColocarPermitido = null;
-		//Variable auxiliar para mostrar el objeto en el mapa
+		//Variable auxiliar para saber si el objeto está en la escena
 		this.objectOnScene = false;
 		//Objeto auxiliar helper para la colocación
 		this.helper = new AssignHelper();
 		//Booleano para saber si el helper está en uso y no volver a pintarlo
 		this.helperOnScene = false;
-		//Variable auxiliar para trabajar con él
+		//Variable auxiliar para trabajar con la celda en hover 
 		this.celdaActual = null;
 
 		//Elemento actual para seguir añadiendo
@@ -27,9 +27,13 @@ class GestorAcciones {
 		Ctrl + Z por ejemplo.
 		*/
 		this.actions = new ActionStack();
-
-		//Coordenadas de la posición anterior del objeto. Por si se revierte la acción
+		//Coordenadas de la posición anterior del objeto. Por si se revierte la acción ó cancela
 		this.lastestObjectCoords = null;
+
+		//Gestor de colores para el cambio de color
+		this.gestorColores =  new Colores();
+		//atributo del color actual del objeto, para añadir con el mismo color
+		this.colorActual = null;
 	}
 
 	/**
@@ -77,6 +81,13 @@ class GestorAcciones {
 
 		var gestor = new GestorModelos(this.elementoActual);
 		var object3D = gestor.getObject3D();
+
+		if(this.colorActual != null){
+
+			if(typeof object3D.setColorChange === 'function'){
+				object3D.setColorChange(this.colorActual);
+			}
+		}
 
 		this.objetoAColocar = object3D;
 	}
@@ -358,6 +369,9 @@ class GestorAcciones {
 			this.helper.setColorCorrecto();
 			this.destroyHelper();
 			this.scene.setApplicationMode(MyScene.NO_ACTION);
+			
+			//
+			this.colorActual = null;
 		}
 	}
 
@@ -374,6 +388,8 @@ class GestorAcciones {
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
 
+				//
+				this.colorActual = null;
 				break;
 
 			case MyScene.SELECTED_OBJECT:
@@ -393,7 +409,8 @@ class GestorAcciones {
 				this.destroyHelper();
 				this.celdaActual.material.color = new THREE.Color(0xadc986);
 				this.scene.setApplicationMode(MyScene.NO_ACTION);
-
+				//
+				this.colorActual = null;
 				break;
 		}
 	}
@@ -437,6 +454,11 @@ class GestorAcciones {
 		}
 	}
 
+
+	/**
+	  * Método que se ejecuta cuando se pulsa Ctrl + x, y que saca de la pila la última acción deshecha
+	  * para rehacerla
+	  */
 	reDoAction() {
 		if (this.scene.getApplicationMode() == MyScene.NO_ACTION) {
 			if (!this.actions.emptyInverse()) {
@@ -475,4 +497,37 @@ class GestorAcciones {
 			this.cancelAction();
 		}
 	}
+
+
+
+	/**
+	 * Método que cambia el color del objeto seleccionado si éste tiene un cambio de color aplicado
+	 */
+
+	switchColor(){
+
+		if(this.scene.getApplicationMode() == MyScene.ADDING_OBJECT || 
+			this.scene.getApplicationMode() == MyScene.SELECTED_OBJECT){
+
+			//El objeto se encuentra en this.objetoAColocar
+			//Llamamos al cambio de color pasándole el objeto actual
+			//Actualizamos la variable colorActual
+			this.colorActual = this.gestorColores.cambiaColor(this.objetoAColocar);
+
+			}
+
+	}
+
+	resetColorActual(){
+		this.colorActual = null;
+	}
+
+
+
+
+
+
+
+
+
 }

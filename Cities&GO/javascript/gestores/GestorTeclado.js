@@ -6,6 +6,7 @@ class GestorTeclado {
 
 	//Al pulsar una tecla
 	onKeyDown(event) {
+		
 		var keyCode = event.which;
 
 		switch (keyCode) {
@@ -39,6 +40,12 @@ class GestorTeclado {
 			case 82:
 				this.gestorAcciones.rotateOBJ();
 				break;
+
+			//C
+			case 67:
+				this.gestorAcciones.switchColor();
+				break;	
+			
 		}
 	}
 }

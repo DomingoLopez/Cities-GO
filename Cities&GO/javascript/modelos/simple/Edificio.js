@@ -8,7 +8,7 @@ class Edificio extends ObjetoSimple {
 	generarRascacielos(numero) {
 		//var random = Math.floor(Math.random() * 3) * 2 + 12;
 		var c = new Colores();
-		var colorRascacielos = c.getRandomRasca();
+		var colorRascacielos = c.getColorRasca();
 		for (var i = 0; i < numero; i++) {
 			var col = colorRascacielos;
 			var geo = 5;
