@@ -191,10 +191,6 @@ class MyScene extends THREE.Scene {
 		// Se muestran o no los ejes según lo que idique la GUI
 		this.axis.visible = this.guiControls.axisOnOff;
 
-		//Actualizamos cada posición de la cámara
-		//this.camara.getCamera().update();
-
-		// Se actualiza el resto del modelo
 
 		//Actualizamos el mapa
 		this.mapa.update();
