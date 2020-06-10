@@ -39,6 +39,7 @@ class Rascacielos extends ObjetoComplejo {
 
 		var newColor = this.colores_rascacielos[nuevo_indice];
 
+		//-1 porque el último añadido es la acera
 		for(var i = 0; i< arrayMeshes.length -1; i++){
 			if( (i%2) != 0){
 				arrayMeshes[i].material.color = new THREE.Color(newColor);
